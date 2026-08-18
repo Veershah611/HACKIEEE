@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HackIEEE 2026 — IEEE Nirma University</title>
+<meta name="description" content="HackIEEE 2026 — a 36-hour hackathon by the IEEE Nirma University Student Branch. Computer Society, ITSS and SPS. Four tracks: Sustainability, Cyber Security, Fintech, Healthcare." />
+<meta name="theme-color" content="#061A33" />
+<meta property="og:title" content="HackIEEE 2026 — IEEE Nirma University" />
+<meta property="og:description" content="Build something that clicks. 36 hours. 4 tracks." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23061A33'/%3E%3Crect x='7' y='13' width='18' height='10' rx='2' fill='%23C91A09'/%3E%3Crect x='10' y='9' width='5' height='4' rx='1.6' fill='%23C91A09'/%3E%3Crect x='17' y='9' width='5' height='4' rx='1.6' fill='%23C91A09'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Pixel display: Pixelify Sans (headings) + Silkscreen (small labels).
+     Flavour faces kept per section: Bangers (tracks), Cinzel Decorative
+     (the decree), Special Elite (newsprint). All SIL OFL. -->
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..112,200..700&family=Pixelify+Sans:wght@400..700&family=Silkscreen:wght@400;700&family=Bangers&family=Cinzel+Decorative:wght@700;900&family=Special+Elite&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<!-- Marks that scripting is live. Every rule that hides content for an
+     animation is gated on .js, so if this script never runs the page
+     renders fully visible instead of blank below the hero. -->
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<!-- =====================================================================
+     INTRO — slow cinematic assembly, modelled on the Classic Space site:
+     a long zoom-out while pieces drift in from a distance and settle.
+     ===================================================================== -->
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__scrim"></div>
+  <div class="intro__ui">
+    <p class="intro__label">assembly</p>
+    <p class="intro__step"><b id="introStep">01</b><span>/ 05</span></p>
+  </div>
+  <div class="intro__bar"><i id="introBar"></i></div>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav dock" id="nav">
+  <!-- studs sit behind the brick body, so only their tops show -->
+  <span class="dock__studs" aria-hidden="true">
+    <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+  </span>
+
+  <div class="dock__body">
+    <a class="nav__brand" href="#top">
+      <img src="assets/itss_nirma.png" alt="" class="nav__logo" />
+      <span>HackIEEE</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#about">About</a>
+      <a href="#tracks">Tracks</a>
+      <a href="#decree">Decree</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#prizes">Prizes</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--solid nav__cta" href="#register">Register</a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+  </div>
+</header>
+
+<div class="drawer" id="drawer" aria-hidden="true">
+  <a href="#about">About</a>
+  <a href="#tracks">Tracks</a>
+  <a href="#decree">Decree</a>
+  <a href="#schedule">Schedule</a>
+  <a href="#prizes">Prizes</a>
+  <a href="#faq">FAQ</a>
+  <a class="btn btn--solid" href="#register">Register</a>
+</div>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero__text">
+    <p class="eyebrow" data-stage="1">IEEE Nirma University&nbsp;&nbsp;·&nbsp;&nbsp;CS · ITSS · SPS</p>
+    <h1 class="hero__title" data-stage="2">HackIEEE<span>26</span></h1>
+    <p class="hero__sub" data-stage="3">A 36-hour build sprint. Four problem tracks, one table, and however many bricks it takes to make the idea stand up.</p>
+    <div class="hero__meta" data-stage="4">
+      <div><em>Dates</em><b data-field="dates">21 &#8212; 23 December 2026</b></div>
+      <div><em>Venue</em><b>Nirma University, Ahmedabad</b></div>
+      <div><em>Teams</em><b>2 — 4 builders</b></div>
+    </div>
+    <div class="hero__cta" data-stage="5">
+      <a class="btn btn--solid btn--lg" href="#register">Register your team</a>
+      <a class="btn btn--line btn--lg" href="#tracks">See the tracks</a>
+    </div>
+  </div>
+
+  <!-- 3D brick stack — geometry generated in js/main.js -->
+  <div class="hero__build">
+    <div class="stage" id="stage">
+      <div class="stack" id="stack"></div>
+      <div class="stack__shadow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="grid2">
+      <div>
+        <p class="tag" data-reveal>01 — About</p>
+        <h2 class="h2" data-reveal>Every build starts with two studs clicking together.</h2>
+      </div>
+      <div class="prose">
+        <p data-reveal>HackIEEE is the flagship hackathon of the <b>IEEE Nirma University Student Branch</b>, run jointly by the Computer Society, the Intelligent Transportation Systems Society and the Signal Processing Society.</p>
+        <p data-reveal>You get 36 hours, a workbench and a brief. Mentors circulate through the night, hardware is on the shelf, and everything ends with an eight-minute demo on the main stage.</p>
+      </div>
+    </div>
+
+    <div class="stats" data-reveal>
+      <div><b data-count="36">0</b><em>hours</em></div>
+      <div><b data-count="4">0</b><em>tracks</em></div>
+      <div><b data-count="300" data-suffix="+">0</b><em>builders</em></div>
+      <div><b data-count="3">0</b><em>chapters</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRACKS ============ -->
+<section class="sec sec--tracks" id="tracks">
+  <div class="wrap">
+    <p class="tag" data-reveal>02 — Tracks</p>
+    <h2 class="h2" data-reveal>Pick a brick.</h2>
+    <p class="sub" data-reveal>Choose one track at check-in. Your whole build snaps onto it.</p>
+
+    <div class="tracks">
+      <!-- Each track is matched to the hero whose LEGO colours it borrows. -->
+      <article class="track" data-reveal style="--c:#4B9F4A;--ct:#7ED17C">
+        <div class="track__brick"></div>
+        <div class="track__body">
+          <p class="track__n">01</p>
+          <p class="track__hero">The Hulk</p>
+          <h3>Sustainability</h3>
+          <p>Climate telemetry, circular supply chains and energy-aware systems — the plumbing that makes green infrastructure measurable.</p>
+          <span class="track__tag">Smash the problem, not the planet</span>
+        </div>
+      </article>
+
+      <article class="track" data-reveal style="--c:#0055BF;--ct:#5B9BEC">
+        <div class="track__brick"></div>
+        <div class="track__body">
+          <p class="track__n">02</p>
+          <p class="track__hero">Captain America</p>
+          <h3>Cyber Security</h3>
+          <p>Threat detection, privacy-preserving pipelines and secure-by-default tooling. Break it, then build the thing that stops it.</p>
+          <span class="track__tag">Somebody has to hold the line</span>
+        </div>
+      </article>
+
+      <article class="track" data-reveal style="--c:#C91A09;--ct:#F0503A">
+        <div class="track__brick"></div>
+        <div class="track__body">
+          <p class="track__n">03</p>
+          <p class="track__hero">Iron Man</p>
+          <h3>Fintech</h3>
+          <p>Payments, credit access, fraud signals and financial literacy for the next billion users. Money is a protocol — improve it.</p>
+          <span class="track__tag">Build the suit, then fund the workshop</span>
+        </div>
+      </article>
+
+      <article class="track" data-reveal style="--c:#F2CD37;--ct:#F2CD37">
+        <div class="track__brick"></div>
+        <div class="track__body">
+          <p class="track__n">04</p>
+          <p class="track__hero">Wolverine</p>
+          <h3>Healthcare</h3>
+          <p>Diagnostics, triage and medical signal processing in low-resource settings. Latency here is measured in lives.</p>
+          <span class="track__tag">A healing factor everyone can use</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     THE DECREE — villain-side framing for the problem statements.
+     Latverian green + gunmetal, engraved serif.
+     ===================================================================== -->
+<section class="sec sec--decree" id="decree">
+  <div class="decree__runes" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="decree">
+      <div class="decree__fig" data-reveal>
+        <!-- Original illustration drawn for this site. Not traced from, or
+             derived from, any LEGO or Marvel asset. Palette is Bright Green
+             + Metallic Gold + Dark Blue. -->
+        <svg viewBox="0 0 240 380" role="img" aria-label="Armoured monarch minifigure">
+          <defs>
+            <linearGradient id="dmCloak" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#5CB85A"/><stop offset="1" stop-color="#2A5F29"/>
+            </linearGradient>
+            <linearGradient id="dmGold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F7DC6B"/><stop offset="1" stop-color="#B8891F"/>
+            </linearGradient>
+            <linearGradient id="dmTunic" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#4B9F4A"/><stop offset="1" stop-color="#2C6B2C"/>
+            </linearGradient>
+          </defs>
+
+          <!-- cloak, hanging behind the whole figure -->
+          <path d="M58 352 Q46 236 92 192 L148 192 Q194 236 182 352 Q120 340 58 352 Z" fill="url(#dmCloak)"/>
+          <path d="M58 352 Q46 236 92 192 L114 192 Q84 250 88 348 Z" fill="#215021" opacity=".45"/>
+
+          <!-- legs -->
+          <rect x="80" y="292" width="80" height="20" rx="3" fill="#0A3463"/>
+          <rect x="82" y="312" width="36" height="56" rx="3" fill="#0E4179"/>
+          <rect x="122" y="312" width="36" height="56" rx="3" fill="#0A3463"/>
+          <rect x="82" y="356" width="36" height="12" rx="2" fill="#072949"/>
+          <rect x="122" y="356" width="36" height="12" rx="2" fill="#061F3A"/>
+
+          <!-- torso -->
+          <path d="M88 180 L152 180 L164 292 L76 292 Z" fill="url(#dmTunic)"/>
+          <path d="M120 180 L152 180 L164 292 L120 292 Z" fill="#2C6B2C" opacity=".4"/>
+          <path d="M98 194 L142 194 L150 250 L90 250 Z" fill="url(#dmGold)"/>
+          <path d="M120 194 L142 194 L150 250 L120 250 Z" fill="#B8891F" opacity=".35"/>
+          <path d="M108 206 L132 206 L128 236 L112 236 Z" fill="#2F6B2E"/>
+          <rect x="80" y="266" width="80" height="16" rx="2" fill="#B8891F"/>
+          <rect x="110" y="268" width="20" height="12" rx="2" fill="#F7DC6B"/>
+
+          <!-- arms, with C-clip hands seated at the arm ends -->
+          <path d="M88 186 L64 196 L54 254 L78 260 Z" fill="#4B9F4A"/>
+          <path d="M152 186 L176 196 L186 254 L162 260 Z" fill="#3C8A3B"/>
+          <circle cx="64" cy="272" r="13" fill="none" stroke="#DBAC34" stroke-width="11"
+                  stroke-dasharray="58 24" transform="rotate(150 64 272)"/>
+          <circle cx="176" cy="272" r="13" fill="none" stroke="#B8891F" stroke-width="11"
+                  stroke-dasharray="58 24" transform="rotate(30 176 272)"/>
+
+          <rect x="106" y="168" width="28" height="14" fill="#2F6B2E"/>
+
+          <!-- head: gold mask -->
+          <rect x="76" y="84" width="88" height="84" rx="13" fill="url(#dmGold)"/>
+          <path d="M120 84 L151 84 A13 13 0 0 1 164 97 L164 155 A13 13 0 0 1 151 168 L120 168 Z" fill="#B8891F" opacity=".28"/>
+          <path d="M78 116 H162" stroke="#8F6A16" stroke-width="2.5"/>
+          <circle cx="88" cy="106" r="2.6" fill="#8F6A16"/><circle cx="152" cy="106" r="2.6" fill="#8F6A16"/>
+          <rect x="90" y="126" width="24" height="11" rx="3" fill="#061A33"/>
+          <rect x="126" y="126" width="24" height="11" rx="3" fill="#061A33"/>
+          <rect x="100" y="150" width="40" height="7" rx="2" fill="#8F6A16"/>
+          <path d="M108 150 V157 M120 150 V157 M132 150 V157" stroke="#061A33" stroke-width="2"/>
+
+          <!-- hood: an open cowl framing the mask, not a dome over it -->
+          <path d="M66 176 Q60 84 120 84 Q180 84 174 176 L156 176 Q160 104 120 104 Q80 104 84 176 Z" fill="url(#dmCloak)"/>
+          <path d="M84 104 Q120 96 156 104 L156 114 Q120 106 84 114 Z" fill="#215021" opacity=".5"/>
+
+          <!-- head stud, seated flush on the crown -->
+          <ellipse cx="120" cy="84" rx="17" ry="7" fill="#2A5F29"/>
+          <rect x="103" y="74" width="34" height="11" fill="#2A5F29"/>
+          <ellipse cx="120" cy="74" rx="17" ry="7" fill="#4B9F4A"/>
+        </svg>
+      </div>
+
+      <div class="decree__body">
+        <p class="tag" data-reveal>03 — The Decree</p>
+        <h2 class="decree__h" data-reveal>The problems are<br>not suggestions.</h2>
+        <blockquote class="decree__quote" data-reveal>Hell answers to me&hellip; for <b>I. AM. DOOM.</b></blockquote>
+        <p class="decree__lead" data-reveal>Somewhere behind the curtain, a masked head of state has drafted four impossible briefs and signed them all with the same iron hand.</p>
+        <p class="decree__p" data-reveal>Problem statements drop at kickoff and not one minute earlier. They are deliberately harder than you want them to be — that is the point. You have 36 hours, a table, and no permission to be timid.</p>
+        <ul class="decree__list">
+          <li data-reveal><em>I.</em> The brief is sealed until the opening ceremony.</li>
+          <li data-reveal><em>II.</em> One track per team. Choose it and live with it.</li>
+          <li data-reveal><em>III.</em> A demo that does not run is a demo that does not count.</li>
+          <li data-reveal><em>IV.</em> Doom does not accept excuses. Neither do the judges.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCHEDULE ============ -->
+<section class="sec" id="schedule">
+  <div class="wrap">
+    <p class="tag" data-reveal>04 — Schedule</p>
+    <h2 class="h2" data-reveal>Build sequence.</h2>
+
+    <ol class="steps">
+      <li data-reveal><span class="steps__n">01</span><div><h3>Registration opens</h3><time data-field="d1">Mon 02 Nov 2026</time><p>Team up — two to four members. Submit a short abstract of the idea.</p></div></li>
+      <li data-reveal><span class="steps__n">02</span><div><h3>Shortlist announced</h3><time data-field="d2">Mon 07 Dec 2026</time><p>Selected teams are notified by email and track allocation is locked.</p></div></li>
+      <li data-reveal><span class="steps__n">03</span><div><h3>Check-in &amp; kickoff</h3><time data-field="d3">Mon 21 Dec &#183; 16:00</time><p>Badge pickup, opening keynote and the problem-statement reveal.</p></div></li>
+      <li data-reveal><span class="steps__n">04</span><div><h3>Build window</h3><time data-field="d4">Mon 21 Dec &#183; 19:00</time><p>36 hours on the clock, with mentor rounds every four hours.</p></div></li>
+      <li data-reveal><span class="steps__n">05</span><div><h3>Freeze &amp; judging</h3><time data-field="d5">Wed 23 Dec &#183; 07:00</time><p>Repos lock, then round-one judging happens at the tables.</p></div></li>
+      <li data-reveal><span class="steps__n">06</span><div><h3>Demo &amp; awards</h3><time data-field="d6">Wed 23 Dec &#183; 15:00</time><p>Eight-minute demos, live Q&amp;A with the jury, then prizes.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- =====================================================================
+     THE DAILY BUILD — hero-side counterweight. Newsprint, red and blue,
+     web lines. Mentors, community and the overnight floor.
+     ===================================================================== -->
+<section class="sec sec--bugle" id="bugle">
+  <div class="bugle__web" aria-hidden="true">
+    <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M300 0 V600 M0 300 H600 M88 88 L512 512 M512 88 L88 512"/>
+        <path d="M300 60 L455 145 L455 455 L300 540 L145 455 L145 145 Z"/>
+        <path d="M300 120 L405 175 L405 425 L300 480 L195 425 L195 175 Z"/>
+        <path d="M300 185 L358 212 L358 388 L300 415 L242 388 L242 212 Z"/>
+        <path d="M300 245 L330 262 L330 338 L300 355 L270 338 L270 262 Z"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="wrap">
+    <div class="bugle">
+      <div class="bugle__body">
+        <p class="bugle__masthead" data-reveal>The Daily Build</p>
+        <p class="bugle__dek" data-reveal>Late edition&nbsp;·&nbsp;Ahmedabad&nbsp;·&nbsp;Campus bureau</p>
+        <h2 class="bugle__h" data-reveal>Menace? No — mentors.</h2>
+        <p class="bugle__lead" data-reveal>Reports of masked figures swinging between tables at 3 a.m. have been confirmed. They are our mentors, and they are here to help.</p>
+        <div class="bugle__cols">
+          <p data-reveal>Mentor rounds run every four hours across all four tracks — systems, security, signals and product. If you are stuck, put the little flag up on your table and someone will drop in.</p>
+          <p data-reveal>Pre-event workshops cover the basics for each track, the hardware shelf is open all weekend, and the floor never actually closes. With great uptime comes great responsibility.</p>
+        </div>
+      </div>
+
+      <div class="bugle__fig" data-reveal>
+        <!-- Original illustration drawn for this site. Not traced from, or
+             derived from, any LEGO or Marvel asset. Palette is Bright Red
+             + Bright Blue + White. -->
+        <svg viewBox="0 0 240 380" role="img" aria-label="Web-slinging builder minifigure">
+          <defs>
+            <linearGradient id="wbRed" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#E5341F"/><stop offset="1" stop-color="#A31408"/>
+            </linearGradient>
+            <linearGradient id="wbBlue" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0A68D8"/><stop offset="1" stop-color="#00408F"/>
+            </linearGradient>
+            <pattern id="wbWeb" width="16" height="16" patternUnits="userSpaceOnUse">
+              <path d="M8 0 V16 M0 8 H16 M0 0 L16 16 M16 0 L0 16"
+                    stroke="#3A0703" stroke-width=".9" fill="none" opacity=".45"/>
+            </pattern>
+          </defs>
+
+          <!-- legs -->
+          <rect x="80" y="292" width="80" height="20" rx="3" fill="#00408F"/>
+          <rect x="82" y="312" width="36" height="56" rx="3" fill="url(#wbBlue)"/>
+          <rect x="122" y="312" width="36" height="56" rx="3" fill="#00408F"/>
+          <rect x="82" y="356" width="36" height="12" rx="2" fill="#00305F"/>
+          <rect x="122" y="356" width="36" height="12" rx="2" fill="#00274D"/>
+
+          <!-- torso: webbed suit with a blue jacket over it -->
+          <path d="M88 180 L152 180 L164 292 L76 292 Z" fill="url(#wbRed)"/>
+          <path d="M88 180 L152 180 L164 292 L76 292 Z" fill="url(#wbWeb)"/>
+          <path d="M88 180 L110 180 L102 292 L76 292 Z" fill="url(#wbBlue)"/>
+          <path d="M152 180 L130 180 L138 292 L164 292 Z" fill="#00408F"/>
+          <g stroke="#3A0703" stroke-width="2.6" fill="none" stroke-linecap="round">
+            <path d="M114 212 Q104 204 100 194 M126 212 Q136 204 140 194"/>
+            <path d="M113 220 Q101 218 96 211 M127 220 Q139 218 144 211"/>
+            <path d="M114 228 Q105 236 102 244 M126 228 Q135 236 138 244"/>
+          </g>
+          <ellipse cx="120" cy="222" rx="6" ry="9" fill="#3A0703"/>
+          <ellipse cx="120" cy="209" rx="4" ry="3.5" fill="#3A0703"/>
+
+          <!-- arms: right raised mid-sling, left hanging -->
+          <path d="M152 186 L182 154 L202 172 L172 204 Z" fill="url(#wbBlue)"/>
+          <path d="M88 186 L64 196 L54 254 L78 260 Z" fill="url(#wbBlue)"/>
+          <circle cx="199" cy="167" r="13" fill="none" stroke="#C91A09" stroke-width="11"
+                  stroke-dasharray="58 24" transform="rotate(-40 199 167)"/>
+          <circle cx="64" cy="272" r="13" fill="none" stroke="#C91A09" stroke-width="11"
+                  stroke-dasharray="58 24" transform="rotate(150 64 272)"/>
+          <g stroke="#F2F3F2" fill="none" stroke-linecap="round" opacity=".55">
+            <path d="M208 158 L238 128" stroke-width="2.4"/>
+            <path d="M212 164 L236 152" stroke-width="1.5" opacity=".7"/>
+          </g>
+
+          <rect x="106" y="168" width="28" height="14" fill="#A31408"/>
+
+          <!-- head -->
+          <rect x="76" y="84" width="88" height="84" rx="15" fill="url(#wbRed)"/>
+          <rect x="76" y="84" width="88" height="84" rx="15" fill="url(#wbWeb)"/>
+          <path d="M88 130 Q86 106 108 104 Q120 103 118 122 Q116 138 100 138 Q89 138 88 130 Z"
+                fill="#F2F3F2" stroke="#120303" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M152 130 Q154 106 132 104 Q120 103 122 122 Q124 138 140 138 Q151 138 152 130 Z"
+                fill="#F2F3F2" stroke="#120303" stroke-width="4" stroke-linejoin="round"/>
+
+          <!-- head stud, seated flush on the crown -->
+          <ellipse cx="120" cy="84" rx="17" ry="7" fill="#A31408"/>
+          <rect x="103" y="74" width="34" height="11" fill="#A31408"/>
+          <ellipse cx="120" cy="74" rx="17" ry="7" fill="#E5341F"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRIZES ============ -->
+<section class="sec sec--prizes" id="prizes">
+  <div class="wrap">
+    <p class="tag" data-reveal>05 — Prizes</p>
+    <h2 class="h2" data-reveal>&#8377;1,75,000 pool.</h2>
+    <p class="sub" data-reveal>Plus internship shortlists, cloud credits and hardware kits from our partners.</p>
+
+    <div class="prizes">
+      <article data-reveal><em>Winner</em><b>&#8377;75,000</b><p>Cash prize, internship shortlist and hardware kits.</p></article>
+      <article data-reveal><em>Runner-up</em><b>&#8377;40,000</b><p>Cash prize and partner cloud credits.</p></article>
+      <article data-reveal><em>Third</em><b>&#8377;20,000</b><p>Cash prize and partner goodies.</p></article>
+      <article data-reveal><em>Best in track ×4</em><b>&#8377;10,000</b><p>One award for each of the four problem tracks.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHAPTERS ============ -->
+<section class="sec" id="chapters">
+  <div class="wrap">
+    <p class="tag" data-reveal>06 — Organisers</p>
+    <h2 class="h2" data-reveal>Three chapters, one floor.</h2>
+
+    <div class="chapters">
+      <article data-reveal>
+        <div class="chapter__logo" data-fallback="CS"><img src="assets/logos/cs.png" alt="IEEE Computer Society, Nirma University" /></div>
+        <h3>Computer Society</h3>
+        <p>Systems, security and AI — the software backbone of the branch.</p>
+      </article>
+      <article data-reveal>
+        <div class="chapter__logo"><img src="assets/itss_nirma.png" alt="IEEE Intelligent Transportation Systems Society, Nirma University" /></div>
+        <h3>ITSS</h3>
+        <p>Mobility, sensing and smart infrastructure research.</p>
+      </article>
+      <article data-reveal>
+        <div class="chapter__logo" data-fallback="SPS"><img src="assets/logos/sps.png" alt="IEEE Signal Processing Society, Nirma University" /></div>
+        <h3>Signal Processing Society</h3>
+        <p>Audio, vision and biomedical signals.</p>
+      </article>
+    </div>
+
+    <div class="partners" data-reveal>
+      <p class="tag">Partners</p>
+      <div class="partners__row">
+        <span>Slot 01</span><span>Slot 02</span><span>Slot 03</span><span>Slot 04</span><span>Slot 05</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <p class="tag" data-reveal>07 — FAQ</p>
+    <h2 class="h2" data-reveal>The manual.</h2>
+
+    <div class="faq" id="faqList">
+      <details data-reveal><summary>Who can participate?<i></i></summary>
+        <p>Any undergraduate or postgraduate student with a valid college ID. You do not need to be an IEEE member, and teams from other institutes are welcome.</p></details>
+      <details data-reveal><summary>What is the team size?<i></i></summary>
+        <p>Two to four members. Solo entries are allowed and we will help you find a team at check-in.</p></details>
+      <details data-reveal><summary>Is there a registration fee?<i></i></summary>
+        <p>No. Entry is free for shortlisted teams, and meals, workspace and Wi-Fi across the 36 hours are covered.</p></details>
+      <details data-reveal><summary>I have never been to a hackathon. Should I come?<i></i></summary>
+        <p>Yes. A large part of the floor will be first-timers, mentors run scheduled rounds through the night, and pre-event workshops cover the basics for each track.</p></details>
+      <details data-reveal><summary>Can we start building beforehand?<i></i></summary>
+        <p>Ideation and research are fine, but code must be written after kickoff. Open-source libraries and starters are allowed — just declare them.</p></details>
+      <details data-reveal><summary>Who owns the IP?<i></i></summary>
+        <p>You do. Teams keep full ownership of everything they build. We only ask permission to showcase it in IEEE Nirma recaps.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REGISTER ============ -->
+<section class="cta" id="register">
+  <div class="wrap">
+    <h2 class="cta__h" data-reveal>Build something that clicks.</h2>
+    <p class="sub" data-reveal>Registration closes <b data-field="close">07 December 2026</b>.</p>
+    <div class="cta__btns" data-reveal>
+      <a class="btn btn--solid btn--lg" href="#">Register your team</a>
+      <a class="btn btn--line btn--lg" href="#">Download rulebook</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div>
+        <img src="assets/itss_nirma.png" alt="" class="foot__logo" />
+        <p>HackIEEE 2026 is organised by the IEEE Nirma University Student Branch — Computer Society, ITSS and SPS.</p>
+      </div>
+      <div class="foot__links">
+        <a href="mailto:ieee@nirmauni.ac.in">ieee@nirmauni.ac.in</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+    <div class="foot__bottom">
+      <span>© 2026 IEEE Nirma University Student Branch</span>
+      <span>Ahmedabad, India</span>
+    </div>
+    <p class="foot__note">A student-run event. Not affiliated with, endorsed by or sponsored by the LEGO Group or Marvel / The Walt Disney Company. All character illustrations are original artwork; no LEGO or Marvel logos, wordmarks or assets are used.</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

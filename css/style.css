@@ -1,0 +1,626 @@
+/* =====================================================================
+   HackIEEE 2026 — IEEE Nirma University
+   LEGO Marvel character palette, real CSS 3D bricks.
+   Motion vocabulary from legospace.tilda.ws/classicspace
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   LEGO Marvel character palette — the only hues used site-wide.
+     Iron Man ....... Bright Red  + Bright Yellow / Metallic Gold
+     Captain America  Bright Blue + White + Bright Red
+     The Hulk ....... Bright Green + Bright Purple / Dark Blue
+     Spider-Man ..... Bright Red  + Bright Blue
+     Wolverine ...... Bright Yellow + Bright Blue + Bright Red
+   Hex values are the real LEGO colour references. Each base also has a
+   lightened tint — the saturated originals are too dark to read as text
+   on a dark ground, so tints are used for type and the bases for fills.
+   --------------------------------------------------------------------- */
+:root{
+  --red:#C91A09;      --red-lt:#F0503A;    /* Bright Red      */
+  --gold:#F2CD37;     --gold-deep:#DBAC34; /* Bright Yellow / Metallic Gold */
+  --blue:#0055BF;     --blue-lt:#5B9BEC;   /* Bright Blue     */
+  --green:#4B9F4A;    --green-lt:#7ED17C;  /* Bright Green    */
+  --purple:#6C2C9C;   --purple-lt:#A66BD4; /* Bright Purple   */
+  --white:#F2F3F2;                         /* White           */
+  --navy:#0A3463;                          /* Dark Blue       */
+
+  /* page ground — Dark Blue carried down for text contrast */
+  --bg:#061A33;
+  --bg-2:#0A3463;
+  --ink:var(--white);
+
+  --muted:rgba(242,243,242,.62);
+  --faint:rgba(242,243,242,.34);
+  --line:rgba(242,243,242,.13);
+
+  --f:'Archivo',system-ui,sans-serif;
+  /* Pixel display carries every main heading; Silkscreen carries the small
+     uppercase labels. Silkscreen is a bitmap face designed for small sizes,
+     so it stays crisp where a scaled pixel font would blur. */
+  --f-pixel:'Pixelify Sans',system-ui,sans-serif;
+  --f-micro:'Silkscreen',ui-monospace,monospace;
+
+  /* Per-section display faces. All SIL OFL / Apache licensed — safe to
+     ship. To swap in a licensed font of your own, redefine one of these
+     and add its @font-face below; nothing else needs to change. */
+  --f-comic:'Bangers',var(--f);               /* tracks — character names   */
+  --f-doom:'Cinzel Decorative',Georgia,serif; /* the decree — engraved      */
+  --f-news:'Special Elite',ui-monospace,monospace; /* newsprint body        */
+
+  /* The nav brick. It has to sit clearly ON the page, so it cannot share
+     the page's own dark blue — change these three to recolour the dock. */
+  --dock-brick:#C91A09;        /* Bright Red */
+  --dock-brick-lit:#E5341F;
+  --dock-brick-dark:#8E1206;
+
+  /* section accents, drawn from the same character palette */
+  --doom-green:var(--green);
+  --doom-gold:var(--gold-deep);
+  --web-red:var(--red-lt);
+  --web-blue:var(--blue-lt);
+
+  --pad:clamp(20px,5vw,64px);
+  --maxw:1220px;
+  --sec-y:clamp(78px,11vw,150px);
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+/* The ground is Dark Blue lit by four character-coloured washes plus a
+   faint stud grid, so it reads as a lit LEGO baseplate instead of flat
+   navy. Fixed attachment keeps the lighting still while content moves. */
+body{
+  color:var(--ink);
+  font-family:var(--f);font-size:16px;line-height:1.65;
+  font-variation-settings:'wdth' 100;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(circle at 1px 1px,rgba(242,243,242,.05) 1px,transparent 0),
+    radial-gradient(ellipse 58% 42% at 10% 4%,rgba(201,26,9,.30),transparent 62%),
+    radial-gradient(ellipse 52% 40% at 92% 16%,rgba(0,85,191,.42),transparent 64%),
+    radial-gradient(ellipse 60% 38% at 78% 74%,rgba(75,159,74,.22),transparent 66%),
+    radial-gradient(ellipse 50% 36% at 14% 92%,rgba(108,44,156,.26),transparent 66%),
+    linear-gradient(180deg,#0A3463 0%,#061A33 46%,#04101F 100%);
+  background-size:26px 26px,auto,auto,auto,auto,auto;
+  background-attachment:fixed;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+summary::-webkit-details-marker{display:none}
+::selection{background:var(--gold);color:var(--bg)}
+
+.wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
+.sec{padding-block:var(--sec-y);position:relative}
+
+::-webkit-scrollbar{width:9px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(242,243,242,.16)}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+
+/* ---------------------------------------------------------- typography */
+.tag{
+  font-family:var(--f-micro);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:22px;
+}
+.h2{
+  font-family:var(--f-pixel);font-weight:600;
+  font-size:clamp(23px,3.1vw,40px);line-height:1.24;letter-spacing:0;
+  max-width:22ch;
+}
+.h2--wide{max-width:none}
+
+.sub{color:var(--muted);font-size:clamp(15px,1.4vw,18px);max-width:52ch;margin-top:16px}
+.prose p{color:var(--muted);font-size:clamp(15px,1.35vw,17px);margin-bottom:16px;max-width:56ch}
+.prose b{color:var(--ink);font-weight:600}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,6vw,90px);align-items:start}
+
+/* Reveal. Hidden only when scripting is live (.js) and the element has
+   not been revealed yet — a script failure leaves everything visible. */
+[data-reveal]{transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.js [data-reveal]:not(.in){opacity:0;transform:translateY(20px)}
+
+/* -------------------------------------------------------------- buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 22px;border-radius:2px;border:1px solid transparent;
+  font-size:14px;font-weight:500;letter-spacing:.01em;white-space:nowrap;
+  transition:background .3s,color .3s,border-color .3s,transform .3s var(--ease);
+}
+.btn--lg{padding:15px 28px;font-size:15px}
+.btn--solid{background:var(--gold);color:#111}
+.btn--solid:hover{background:#F7DC6B;transform:translateY(-2px)}
+.btn--line{border-color:var(--line);color:var(--ink)}
+.btn--line:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+
+/* =====================================================================
+   3D BRICK SYSTEM
+   A brick is a real six-faced cuboid; studs are short cylinders built
+   from a top disc plus a segmented wall. Geometry comes from js/main.js.
+   --u = stud pitch. Brick height is 1.2u, matching real LEGO proportions.
+   ===================================================================== */
+.stage{perspective:1500px;perspective-origin:50% 42%}
+/* resting angle — the intro's turn animation and the sway keyframes both
+   finish here, so handing over between them never jumps */
+.stack{position:relative;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(var(--ry,-34deg))}
+
+.brick{position:absolute;left:50%;top:50%;transform-style:preserve-3d;will-change:transform}
+
+.face{
+  position:absolute;left:50%;top:50%;
+  background:var(--c);
+  backface-visibility:hidden;
+}
+/* face shading — one light source, high and front-left */
+.face--top   {background:color-mix(in srgb,var(--c) 94%,#fff)}
+.face--front {background:color-mix(in srgb,var(--c) 80%,#000)}
+.face--back  {background:color-mix(in srgb,var(--c) 62%,#000)}
+.face--right {background:color-mix(in srgb,var(--c) 68%,#000)}
+.face--left  {background:color-mix(in srgb,var(--c) 86%,#000)}
+.face--bottom{background:color-mix(in srgb,var(--c) 42%,#000)}
+
+.stud{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.stud__top{
+  position:absolute;left:50%;top:50%;border-radius:50%;
+  background:color-mix(in srgb,var(--c) 92%,#fff);
+}
+.stud__wall{position:absolute;left:0;top:0;transform-style:preserve-3d}
+.stud__wall .seg{
+  position:absolute;left:50%;top:50%;
+  background:color-mix(in srgb,var(--c) 74%,#000);
+}
+
+/* soft contact shadow under the stack */
+.stack__shadow{
+  position:absolute;left:50%;bottom:-4%;translate:-50% 0;
+  width:62%;height:44px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,.55),transparent 70%);
+  filter:blur(6px);pointer-events:none;
+}
+
+/* =====================================================================
+   INTRO
+   ===================================================================== */
+/* The intro only exists once JS takes over, so a failed script can never
+   leave the page behind a blank scrim or with hidden hero copy. */
+.intro{display:none;position:fixed;inset:0;z-index:80;pointer-events:none}
+
+/* .intro-active = scroll locked while the build runs (removed at the end)
+   .staged       = hero copy and nav wait for their .in cue (kept for good) */
+body.intro-active{overflow:hidden}
+body.intro-active .intro{display:block}
+/* `:not(.in)` matters — without it these hide rules outrank the `.in`
+   reveal rules on specificity and the element never becomes visible. */
+body.staged [data-stage]:not(.in){opacity:0;transform:translateY(16px)}
+.intro__scrim{position:absolute;inset:0;background:var(--bg);transition:opacity .9s var(--ease)}
+.intro__ui{
+  position:absolute;left:var(--pad);bottom:calc(var(--pad) + 26px);
+  display:flex;align-items:baseline;gap:16px;
+  transition:opacity .5s var(--ease);
+}
+.intro__label{font-family:var(--f-micro);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+.intro__step{font-family:var(--f-micro);font-size:11px;letter-spacing:.2em;color:var(--muted)}
+.intro__step b{color:var(--gold);font-weight:500}
+.intro__bar{
+  position:absolute;left:var(--pad);right:var(--pad);bottom:var(--pad);
+  height:1px;background:var(--line);transition:opacity .5s var(--ease);
+}
+.intro__bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .45s var(--ease)}
+.intro.done{opacity:0;visibility:hidden;transition:opacity .6s var(--ease),visibility .6s}
+.intro.done .intro__scrim{opacity:0}
+
+/* the stack floats above the scrim while it assembles */
+.stage.building{position:relative;z-index:90}
+
+/* hero copy stages in after the build finishes */
+[data-stage]{transition:opacity .7s var(--ease),transform .7s var(--ease)}
+body.staged [data-stage].in{opacity:1;transform:none}
+
+/* idle sway, started once the build settles */
+@keyframes sway{
+  0%,100%{transform:rotateX(-22deg) rotateY(-34deg)}
+  50%    {transform:rotateX(-16deg) rotateY(-6deg)}
+}
+.stack.live{animation:sway 11s ease-in-out infinite}
+
+/* =====================================================================
+   NAV
+   ===================================================================== */
+/* The dock is a floating LEGO brick: a rounded slab with an inset lip
+   along the bottom edge and a lit top edge, with studs poking up behind
+   it. `translate` handles the centring so `transform` stays free for the
+   entrance animation — they are separate properties and compose. */
+.dock{
+  position:fixed;top:14px;left:50%;translate:-50% 0;z-index:70;
+  width:min(1180px,calc(100% - 28px));
+  transition:opacity .6s var(--ease),transform .6s var(--ease),top .35s var(--ease);
+}
+.js .dock:not(.in){opacity:0;transform:translateY(-10px)}
+
+.dock__studs{
+  position:absolute;left:26px;right:26px;top:-9px;z-index:0;
+  display:flex;justify-content:space-between;pointer-events:none;
+}
+/* Real bricks have studs the same colour as the brick — the shading is
+   what reads, not a colour change. Swap --dock-brick to recolour both. */
+.dock__studs i{
+  width:26px;height:14px;border-radius:6px 6px 2px 2px;
+  background:var(--dock-brick);
+  box-shadow:inset 0 3px 0 rgba(255,255,255,.30),inset 0 -3px 0 rgba(0,0,0,.26);
+  transition:transform .4s var(--ease);
+}
+.dock:hover .dock__studs i{transform:translateY(-2px)}
+
+.dock__body{
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:24px;
+  padding:11px 16px 13px;
+  border-radius:9px;
+  background:linear-gradient(180deg,var(--dock-brick-lit) 0%,var(--dock-brick) 58%,var(--dock-brick-dark) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.34),   /* lit top edge */
+    inset 0 -6px 0 rgba(0,0,0,.26),        /* brick lip    */
+    0 14px 38px rgba(0,0,0,.5);
+  transition:box-shadow .35s,transform .35s var(--ease);
+}
+/* once scrolled, the brick presses down a touch */
+.dock.stuck{top:8px}
+.dock.stuck .dock__body{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.28),
+    inset 0 -6px 0 rgba(0,0,0,.32),
+    0 10px 30px rgba(0,0,0,.6);
+}
+
+/* dock contents sit on the brick, so they need brick-relative colours */
+.dock .nav__brand{color:var(--white)}
+.dock .nav__links a{color:var(--white);opacity:.92;position:relative;padding-bottom:2px}
+.dock .nav__links a::after{
+  content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:var(--gold);border-radius:1px;
+  transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);
+}
+/* underline rather than a colour shift — gold text on the red brick would
+   only reach 3.8:1, under the 4.5:1 minimum */
+.dock .nav__links a:hover,.dock .nav__links a.active{opacity:1}
+.dock .nav__links a:hover::after,.dock .nav__links a.active::after{transform:scaleX(1)}
+.dock .burger i{background:var(--white)}
+.nav__brand{display:flex;align-items:center;gap:11px;font-size:16px;font-weight:600;letter-spacing:-.01em}
+.nav__logo{width:32px;height:32px;object-fit:contain}
+.nav__links{display:flex;gap:26px;margin-left:auto}
+.nav__links a{font-size:14px;color:var(--muted);transition:color .25s}
+.nav__links a:hover,.nav__links a.active{color:var(--ink)}
+.nav__cta{padding:9px 18px;font-size:13px}
+
+.burger{display:none;width:38px;height:38px;flex-direction:column;justify-content:center;align-items:center;gap:5px}
+.burger i{width:17px;height:1.5px;background:var(--ink);transition:.35s var(--ease)}
+.burger[aria-expanded="true"] i:first-child{transform:translateY(3.25px) rotate(45deg)}
+.burger[aria-expanded="true"] i:last-child{transform:translateY(-3.25px) rotate(-45deg)}
+
+.drawer{
+  position:fixed;inset:0;z-index:65;background:var(--bg);
+  display:flex;flex-direction:column;justify-content:center;gap:6px;
+  padding:0 var(--pad);
+  clip-path:inset(0 0 100% 0);transition:clip-path .55s var(--ease);
+}
+.drawer.open{clip-path:inset(0 0 0 0)}
+.drawer a:not(.btn){
+  padding:15px 0;border-bottom:1px solid var(--line);
+  font-size:clamp(24px,7vw,34px);font-weight:300;letter-spacing:-.02em;
+}
+.drawer .btn{margin-top:24px;align-self:flex-start}
+
+/* =====================================================================
+   HERO
+   ===================================================================== */
+.hero{
+  min-height:100svh;display:grid;
+  grid-template-columns:1fr minmax(0,46%);
+  align-items:center;gap:clamp(30px,5vw,70px);
+  padding:120px var(--pad) 70px;
+  max-width:var(--maxw);margin-inline:auto;
+}
+.eyebrow{
+  font-family:var(--f-micro);font-size:11px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--blue-lt);margin-bottom:22px;
+}
+.hero__title{
+  font-family:var(--f-pixel);font-weight:700;
+  font-size:clamp(34px,6.2vw,78px);line-height:1.06;letter-spacing:0;
+}
+.hero__title span{
+  font-family:var(--f-micro);font-weight:400;
+  font-size:.26em;letter-spacing:.04em;color:var(--gold);
+  vertical-align:super;margin-left:.3em;
+}
+.hero__sub{color:var(--muted);font-size:clamp(15px,1.45vw,18px);max-width:44ch;margin-top:22px}
+
+.hero__meta{display:flex;flex-wrap:wrap;gap:clamp(20px,3vw,44px);margin-top:34px}
+.hero__meta div{display:flex;flex-direction:column;gap:3px}
+.hero__meta em{font-family:var(--f-micro);font-style:normal;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.hero__meta b{font-size:14px;font-weight:500}
+
+.hero__cta{display:flex;flex-wrap:wrap;gap:11px;margin-top:36px}
+
+.hero__build{display:grid;place-items:center;min-height:min(56vh,520px)}
+.hero__build .stage{width:100%;height:100%;display:grid;place-items:center}
+
+/* =====================================================================
+   STATS
+   ===================================================================== */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  margin-top:clamp(48px,7vw,90px);border-top:1px solid var(--line);
+}
+.stats div{padding:26px 0;display:flex;flex-direction:column;gap:2px}
+.stats b{
+  font-family:var(--f-pixel);font-weight:700;
+  font-size:clamp(30px,4vw,50px);line-height:1;
+  letter-spacing:0;color:var(--gold);font-variant-numeric:tabular-nums;
+}
+.stats em{font-family:var(--f-micro);font-style:normal;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+/* =====================================================================
+   TRACKS
+   ===================================================================== */
+.tracks{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:clamp(20px,2.4vw,34px);margin-top:clamp(40px,5vw,70px);
+}
+.track{
+  border-top:1px solid var(--line);padding-top:26px;
+  transition:border-color .4s;
+}
+.track:hover{border-color:var(--c)}
+.track__brick{
+  height:104px;display:grid;place-items:center;margin-bottom:22px;
+  perspective:800px;perspective-origin:50% 40%;
+}
+.track__brick .stack{transform:rotateX(-24deg) rotateY(var(--ry,-32deg));transition:transform .7s var(--ease)}
+.track:hover .track__brick .stack{transform:rotateX(-24deg) rotateY(calc(var(--ry,-32deg) + 26deg))}
+/* both are <p>, so they need to outrank the generic `.track p` colour */
+.track p.track__n{font-family:var(--f-micro);font-size:11px;letter-spacing:.08em;color:var(--ct,var(--c));margin-bottom:8px}
+.track p.track__hero{
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;
+  font-family:var(--f-comic);font-size:21px;letter-spacing:.03em;
+  color:var(--ct,var(--c));line-height:1;
+}
+.track p.track__hero::before{content:'';flex:none;width:10px;height:10px;border-radius:2px;background:var(--c)}
+.track__tag{font-family:var(--f-micro);font-size:10.5px;letter-spacing:.1em;color:var(--faint);margin-top:14px;display:block;transition:color .35s}
+.track:hover .track__tag{color:var(--ct,var(--c))}
+.track h3{font-weight:500;font-size:clamp(18px,1.7vw,21px);letter-spacing:-.015em;margin-bottom:10px}
+.track p{color:var(--muted);font-size:14.5px;line-height:1.62}
+
+/* =====================================================================
+   THE DECREE — villain side. Latverian green, gunmetal, engraved serif.
+   ===================================================================== */
+.sec--decree{
+  background:
+    radial-gradient(ellipse 80% 60% at 22% 30%,rgba(75,159,74,.20),transparent 70%),
+    linear-gradient(180deg,transparent,rgba(6,26,51,.55) 45%,transparent);
+  overflow:hidden;
+}
+.decree__runes{
+  position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:
+    repeating-linear-gradient(90deg,rgba(219,172,52,.07) 0 1px,transparent 1px 62px),
+    repeating-linear-gradient(0deg,rgba(219,172,52,.05) 0 1px,transparent 1px 62px);
+  mask-image:radial-gradient(ellipse 70% 70% at 25% 45%,#000,transparent 72%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 70% at 25% 45%,#000,transparent 72%);
+}
+.decree{position:relative;display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1fr);gap:clamp(30px,6vw,86px);align-items:center}
+.decree__fig svg{width:100%;max-width:300px;height:auto;margin-inline:auto;filter:drop-shadow(0 24px 40px rgba(0,0,0,.55))}
+.decree__h{
+  font-family:var(--f-pixel);font-weight:700;
+  font-size:clamp(22px,3vw,40px);line-height:1.22;letter-spacing:0;
+  color:var(--ink);margin-bottom:22px;
+}
+.decree__lead{
+  font-family:var(--f-doom);font-weight:400;font-size:clamp(17px,1.9vw,23px);
+  line-height:1.5;color:var(--doom-gold);margin-bottom:18px;max-width:44ch;
+}
+.decree__p{color:var(--muted);font-size:16px;max-width:56ch;margin-bottom:26px}
+
+/* the line, delivered */
+.decree__quote{
+  position:relative;margin:0 0 30px;padding:22px 0 22px 26px;
+  border-left:3px solid var(--green);
+  font-family:var(--f-doom);font-weight:700;
+  font-size:clamp(21px,2.9vw,36px);line-height:1.22;letter-spacing:-.005em;
+  color:var(--white);max-width:22ch;
+}
+.decree__quote b{color:var(--green-lt);font-weight:900;white-space:nowrap}
+.decree__quote::after{
+  content:'';position:absolute;left:-3px;top:0;width:3px;height:100%;
+  background:var(--gold);transform:scaleY(0);transform-origin:top;
+  transition:transform 1.1s var(--ease) .2s;
+}
+.decree__quote.in::after{transform:scaleY(1)}
+.decree__list{display:flex;flex-direction:column;gap:1px;background:rgba(219,172,52,.16);border:1px solid rgba(219,172,52,.16)}
+.decree__list li{
+  background:var(--bg);padding:15px 18px;display:flex;gap:14px;align-items:baseline;
+  font-size:14.5px;color:var(--muted);transition:background .35s,color .35s;
+}
+.decree__list li:hover{background:rgba(75,159,74,.16);color:var(--ink)}
+.decree__list em{
+  font-family:var(--f-doom);font-style:normal;font-weight:700;
+  font-size:15px;color:var(--doom-green);min-width:26px;
+}
+
+/* =====================================================================
+   THE DAILY BUILD — hero side. Newsprint, web lines, red and blue.
+   ===================================================================== */
+.sec--bugle{position:relative;overflow:hidden;border-block:1px solid var(--line)}
+.bugle__web{
+  position:absolute;top:50%;right:-14%;translate:0 -50%;
+  width:min(760px,86vw);aspect-ratio:1;color:var(--web-red);opacity:.16;pointer-events:none;
+}
+.bugle__web svg{width:100%;height:100%}
+.bugle{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.6fr);gap:clamp(30px,6vw,80px);align-items:center}
+.bugle__masthead{
+  font-family:var(--f-pixel);font-weight:700;
+  font-size:clamp(26px,3.8vw,50px);line-height:1.1;
+  color:var(--ink);letter-spacing:0;
+}
+.bugle__dek{
+  font-family:var(--f-news);font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);border-block:1px solid var(--line);padding:7px 0;margin:14px 0 26px;
+}
+.bugle__h{
+  font-family:var(--f-news);font-size:clamp(22px,3.2vw,38px);line-height:1.16;
+  color:var(--web-red);margin-bottom:16px;
+}
+.bugle__lead{font-family:var(--f-news);font-size:clamp(15px,1.6vw,19px);line-height:1.6;color:var(--ink);margin-bottom:24px;max-width:48ch}
+.bugle__cols{columns:2;column-gap:34px;column-rule:1px solid var(--line)}
+.bugle__cols p{color:var(--muted);font-size:14.5px;break-inside:avoid;margin-bottom:14px}
+.bugle__fig svg{width:100%;max-width:270px;height:auto;margin-inline:auto;filter:drop-shadow(0 24px 40px rgba(0,0,0,.55))}
+
+/* =====================================================================
+   SCHEDULE
+   ===================================================================== */
+.steps{margin-top:clamp(36px,5vw,64px);border-top:1px solid var(--line)}
+.steps li{
+  display:grid;grid-template-columns:64px 1fr;gap:clamp(16px,3vw,40px);
+  padding:clamp(22px,2.6vw,32px) 0;border-bottom:1px solid var(--line);
+  transition:background .35s;
+}
+.steps li:hover{background:rgba(242,243,242,.02)}
+.steps__n{font-family:var(--f-micro);font-size:12px;letter-spacing:.1em;color:var(--gold);padding-top:4px}
+.steps h3{font-weight:500;font-size:clamp(17px,1.7vw,21px);letter-spacing:-.015em}
+.steps time{display:block;font-family:var(--f-micro);font-size:11.5px;letter-spacing:.08em;color:var(--blue-lt);margin:5px 0 8px}
+.steps p{color:var(--muted);font-size:14.5px;max-width:60ch}
+
+/* =====================================================================
+   PRIZES
+   ===================================================================== */
+.prizes{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:1px;background:var(--line);margin-top:clamp(40px,5vw,70px);border:1px solid var(--line);
+}
+.prizes article{background:var(--bg);padding:clamp(24px,2.6vw,34px);display:flex;flex-direction:column;gap:8px}
+.prizes em{font-family:var(--f-micro);font-style:normal;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.prizes b{font-family:var(--f-pixel);font-weight:700;font-size:clamp(24px,2.9vw,36px);line-height:1.1;letter-spacing:0;color:var(--gold)}
+.prizes p{color:var(--muted);font-size:13.5px;line-height:1.6}
+
+/* =====================================================================
+   CHAPTERS + PARTNERS
+   ===================================================================== */
+.chapters{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:clamp(24px,3vw,46px);margin-top:clamp(40px,5vw,70px);
+}
+.chapter__logo{
+  width:74px;height:74px;display:grid;place-items:center;
+  border:1px solid var(--line);margin-bottom:20px;position:relative;
+}
+.chapter__logo img{width:74%;height:74%;object-fit:contain}
+.chapter__logo.empty img{display:none}
+.chapter__logo.empty::after{
+  content:attr(data-fallback);font-size:19px;font-weight:300;color:var(--faint);
+}
+.chapter__logo.empty::before{
+  content:'pending';position:absolute;bottom:7px;left:0;right:0;text-align:center;
+  font-family:var(--f-micro);font-size:7px;letter-spacing:.12em;color:rgba(242,243,242,.2);
+}
+.chapters h3{font-weight:500;font-size:17px;letter-spacing:-.01em;margin-bottom:8px}
+.chapters p{color:var(--muted);font-size:14px}
+
+.partners{margin-top:clamp(56px,7vw,96px);border-top:1px solid var(--line);padding-top:34px}
+.partners .tag{margin-bottom:20px}
+.partners__row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.partners__row span{
+  background:var(--bg);aspect-ratio:16/7;display:grid;place-items:center;
+  font-family:var(--f-micro);font-size:11px;letter-spacing:.12em;color:rgba(242,243,242,.22);
+  transition:color .3s;
+}
+.partners__row span:hover{color:var(--gold)}
+
+/* =====================================================================
+   FAQ
+   ===================================================================== */
+.faq{margin-top:clamp(36px,5vw,64px);border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:clamp(20px,2.4vw,28px) 0;list-style:none;
+  font-size:clamp(16px,1.7vw,20px);font-weight:400;letter-spacing:-.015em;
+  transition:color .3s;
+}
+.faq summary:hover{color:var(--gold)}
+.faq summary i{position:relative;flex-shrink:0;width:13px;height:13px}
+.faq summary i::before,.faq summary i::after{
+  content:'';position:absolute;top:50%;left:50%;translate:-50% -50%;background:var(--gold);
+  transition:transform .35s var(--ease);
+}
+.faq summary i::before{width:13px;height:1px}
+.faq summary i::after{width:1px;height:13px}
+.faq details[open] summary{color:var(--gold)}
+.faq details[open] summary i::after{transform:scaleY(0)}
+.faq p{color:var(--muted);font-size:15px;max-width:70ch;padding-bottom:clamp(20px,2.4vw,28px)}
+
+/* =====================================================================
+   CTA + FOOTER
+   ===================================================================== */
+.cta{padding-block:clamp(90px,12vw,160px);text-align:center;border-top:1px solid var(--line)}
+.cta__h{font-family:var(--f-pixel);font-weight:700;font-size:clamp(22px,3.4vw,44px);line-height:1.22;letter-spacing:0;max-width:20ch;margin-inline:auto}
+.cta .sub{margin-inline:auto}
+.cta .sub b{color:var(--gold);font-weight:400}
+.cta__btns{display:flex;flex-wrap:wrap;gap:11px;justify-content:center;margin-top:34px}
+
+.foot{border-top:1px solid var(--line);padding-block:clamp(44px,5vw,66px) 26px}
+.foot__top{display:grid;grid-template-columns:1fr auto;gap:34px;align-items:start;padding-bottom:36px}
+.foot__logo{width:46px;height:46px;object-fit:contain;margin-bottom:16px}
+.foot__top p{color:var(--muted);font-size:14px;max-width:44ch}
+.foot__links{display:flex;flex-direction:column;gap:9px;text-align:right}
+.foot__links a{font-size:14px;color:var(--muted);transition:color .25s}
+.foot__links a:hover{color:var(--gold)}
+.foot__bottom{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;
+  border-top:1px solid var(--line);padding-top:22px;
+  font-family:var(--f-micro);font-size:10.5px;letter-spacing:.08em;color:var(--faint);
+}
+.foot__note{margin-top:14px;font-family:var(--f-micro);font-size:9.5px;line-height:1.8;color:rgba(242,243,242,.2);max-width:80ch}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width:900px){
+  .nav__links,.nav__cta{display:none}
+  .burger{display:flex;margin-left:auto}
+  .dock__studs{left:18px;right:18px}
+  .dock__studs i{width:22px;height:12px}
+  .hero{grid-template-columns:1fr;padding-top:104px;gap:44px}
+  .hero__build{order:-1;min-height:min(38vh,320px)}
+  .grid2{grid-template-columns:1fr;gap:26px}
+  .decree,.bugle{grid-template-columns:1fr;gap:36px}
+  .decree__fig{order:-1}
+  .decree__fig svg,.bugle__fig svg{max-width:210px}
+  .bugle__cols{columns:1}
+  .bugle__web{right:-40%;opacity:.1}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .foot__top{grid-template-columns:1fr}
+  .foot__links{text-align:left;flex-direction:row;gap:20px;flex-wrap:wrap}
+}
+@media (max-width:560px){
+  .stats{grid-template-columns:1fr 1fr}
+  .steps li{grid-template-columns:40px 1fr}
+  .foot__bottom{flex-direction:column;gap:6px}
+}
+
+/* =====================================================================
+   MOTION PREFERENCES
+   ===================================================================== */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001ms!important;animation-iteration-count:1!important;
+    transition-duration:.001ms!important;scroll-behavior:auto!important;
+  }
+  [data-reveal],[data-stage]{opacity:1;transform:none}
+  .nav{opacity:1;transform:none}
+  .intro{display:none}
+}
