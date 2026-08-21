@@ -1,0 +1,98 @@
+/* =====================================================================
+   CTA + FOOTER
+   ===================================================================== */
+.cta {
+	position: relative;
+	overflow: hidden;
+	padding-block: clamp(90px, 12vw, 160px);
+	text-align: center;
+	border-top: 1px solid var(--line);
+}
+.cta__inner {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.cta .tag {
+	color: var(--hazard);
+}
+.cta__h {
+	font-family: var(--f-pixel);
+	font-weight: 700;
+	font-size: clamp(28px, 5vw, 64px);
+	line-height: 1.12;
+	text-shadow:
+		0 3px 0 #6e2400,
+		0 6px 0 #3a1200,
+		0 12px 26px rgba(0, 0, 0, 0.6);
+}
+.cta .sub {
+	margin-inline: auto;
+}
+.cta__btns {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	justify-content: center;
+	margin-top: 30px;
+}
+
+.foot {
+	border-top: 1px solid var(--line);
+	padding-block: clamp(44px, 5vw, 66px) 26px;
+	background: rgba(10, 10, 15, 0.6);
+}
+.foot__top {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 34px;
+	align-items: start;
+	padding-bottom: 34px;
+}
+.foot__top img {
+	width: 46px;
+	height: 46px;
+	object-fit: contain;
+	margin-bottom: 14px;
+}
+.foot__top p {
+	color: var(--muted);
+	font-size: 14px;
+	max-width: 46ch;
+}
+.foot__links {
+	display: flex;
+	flex-direction: column;
+	gap: 9px;
+	text-align: right;
+}
+.foot__links a {
+	font-size: 14px;
+	color: var(--muted);
+	transition: color 0.25s;
+}
+.foot__links a:hover {
+	color: var(--ember);
+}
+.foot__bottom {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	justify-content: space-between;
+	border-top: 1px solid var(--line);
+	padding-top: 22px;
+	font-family: var(--f-micro);
+	font-size: 10px;
+	letter-spacing: 0.06em;
+	color: var(--faint);
+}
+.foot__note {
+	margin-top: 14px;
+	font-family: var(--f-micro);
+	font-size: 9px;
+	line-height: 1.9;
+	color: rgba(240, 237, 232, 0.22);
+	max-width: 84ch;
+}

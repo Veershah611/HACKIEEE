@@ -1,0 +1,106 @@
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width: 900px) {
+	.dock__links,
+	.dock__cta {
+		display: none;
+	}
+	.burger {
+		display: flex;
+	}
+	.grid2 {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+	.decree {
+		grid-template-columns: 1fr;
+		gap: 34px;
+	}
+	.decree__art {
+		order: -1;
+	}
+	.bugle {
+		grid-template-columns: 1fr;
+		gap: 34px;
+	}
+	.bugle__fig {
+		order: -1;
+	}
+	.bugle__cols {
+		columns: 1;
+	}
+	.bugle__web {
+		right: -40%;
+		opacity: 0.1;
+	}
+	.fig--doom {
+		max-width: 210px;
+	}
+	.fig--web {
+		max-width: 200px;
+	}
+	.stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.foot__top {
+		grid-template-columns: 1fr;
+	}
+	.foot__links {
+		text-align: left;
+		flex-direction: row;
+		gap: 20px;
+		flex-wrap: wrap;
+	}
+	.drift--rock,
+	.drift--laptop {
+		display: none;
+	}
+	.diorama {
+		width: 150vw;
+		height: clamp(210px, 32vh, 320px);
+	}
+}
+@media (max-width: 560px) {
+	.hero {
+		padding-top: 104px;
+	}
+	.drift {
+		display: none;
+	}
+	.stats {
+		grid-template-columns: 1fr 1fr;
+	}
+	.countdown div {
+		min-width: 0;
+		flex: 1;
+	}
+	.foot__bottom {
+		flex-direction: column;
+		gap: 6px;
+	}
+	.diorama {
+		width: 190vw;
+		height: clamp(180px, 26vh, 250px);
+	}
+}
+
+/* =====================================================================
+   MOTION PREFERENCES
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+	.js [data-reveal]:not(.in),
+	.js [data-stage]:not(.in),
+	.js .dock:not(.in) {
+		opacity: 1;
+		transform: none;
+	}
+}

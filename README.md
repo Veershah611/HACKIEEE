@@ -1,47 +1,116 @@
 # HackIEEE 2026 — Event Site
 
-**LEGO × Doomsday.** Landing page for the hackathon run by the **IEEE Nirma University Student Branch** — the **Computer Society (CS)**, **Intelligent Transportation Systems Society (ITSS)** and **Signal Processing Society (SPS)** chapters.
+**LEGO × Doomsday.** Site for the hackathon run by the **IEEE Nirma University
+Student Branch** — the **Computer Society (CS)**, **Intelligent Transportation
+Systems Society (ITSS)** and **Signal Processing Society (SPS)** chapters.
 
-Static site. No build step, no dependencies, no framework.
+Next.js 15 (App Router) + TypeScript, exported as a **fully static site**.
+No server, no database — `npm run build` emits a plain folder of HTML/CSS/JS.
 
 ```bash
-python -m http.server 5173
+npm install
+npm run dev
 ```
 
-Then open <http://localhost:5173>. `file://` will not work — the CSS and JS won't load.
+New here? Read **[CONTRIBUTING.md](CONTRIBUTING.md)** — it covers where things
+live and the handful of gotchas that will bite you.
 
 ---
 
-## Performance — the thing that shaped every decision
+## Why it is structured this way
 
-The source renders total **48.8 MB**. Shipped as-is, the hero alone would have been ~18 MB. After the pipeline:
+The site started as one 504-line `index.html`, one 578-line `style.css` and one
+342-line `main.js`. That was well-built, but it did not survive more than one
+person: every change landed in the same three files, and every string was welded
+into markup so no non-developer could touch the copy.
 
-| | Before | After |
+The structure now separates the three things that different people change:
+
+| You want to change | You edit | You need to know |
 | --- | --- | --- |
-| All 35 renders | 48.84 MB | **2.21 MB** (95.5% smaller) |
-| Initial view (measured) | — | **509 KB across 20 requests** |
+| Copy, dates, prizes, tracks, FAQ | `content/*.ts` | Nothing. Typed data files. |
+| How it looks | `styles/` | CSS |
+| How it behaves | `components/`, `lib/` | React |
 
-Initial-view breakdown: fonts 176 KB · WebP 190 KB · logo PNG 103 KB · CSS 28 KB · HTML 20 KB · JS 13 KB.
+Three people can work on the same section at once and touch three different
+files. That is the entire point of the reorganisation.
 
-Three things keep it there:
+```
+app/
+  layout.tsx           # metadata, fonts, style imports, the .js gate
+  page.tsx             # section order — the whole page composition
+components/
+  sections/            # one file per page section
+  ui/                  # inline SVG figures, shared pieces
+  SiteEffects.tsx      # page-wide reveal/counter/anchor effects
+content/               # <- all copy and data
+lib/
+  hooks/               # one file per behaviour
+  media.ts             # reduced-motion / pointer probes
+styles/
+  tokens.css           # palette, type stack, spacing
+  base.css             # reset, typography, buttons, reveal gating
+  sections/            # one file per section, imported in page order
+  responsive.css
+public/assets/
+  opt/*.webp           # optimised — what the page loads
+  logos/
+assets/*.png           # source renders — never shipped
+tools/optimize-assets.py
+```
 
-- **`tools/optimize-assets.py`** trims transparent margins, resizes to a per-role cap, and exports WebP q80. Re-run it after adding or replacing any render:
-  ```bash
-  python tools/optimize-assets.py
-  ```
-  Originals in `assets/` are never touched; output goes to `assets/opt/`. Use `--report` to preview sizes without writing.
-- **No CSS 3D anywhere.** No `perspective`, no `preserve-3d`. Depth is faked with stacked 2D planes, which is dramatically cheaper on low-end phones. The previous brick geometry (hundreds of DOM nodes per brick) is gone entirely.
-- **Everything below the fold is `loading="lazy"`**, and every `<img>` carries explicit `width`/`height` so there is no layout shift.
+---
 
-> **One easy win left:** `assets/logos/itss_nirma.png` is a 500×500 PNG at 103 KB — a fifth of the initial payload for one small logo. Converting it to WebP would cut it to roughly 10 KB.
+## Payload — read this before adding dependencies
+
+The original hand-written site shipped **~20 KB gzipped** of HTML+CSS+JS.
+This one ships **~165 KB gzipped**. That difference is React and the Next
+runtime, and it is the price of the structure above.
+
+| | Original | Now |
+| --- | --- | --- |
+| HTML | 7.9 KB | 12.0 KB |
+| CSS + JS | 12.0 KB | 152.5 KB |
+| **Code total (gzip)** | **19.9 KB** | **164.6 KB** |
+
+Images are unchanged and still dominate: 35 source renders totalling 48.8 MB
+compress to **2.21 MB**, and the measured initial view on the original was
+**509 KB across 20 requests**. The new initial view is roughly **650 KB**.
+
+That is a real regression on a metric this project cared about. It is
+recoverable — see [Open questions](#open-questions) — but in the meantime:
+
+- **Do not add a UI library, animation library or icon package.** The CSS
+  already does all of it.
+- Keep `"use client"` to the sections that genuinely need it. Right now that is
+  Nav, Hero, Tracks, Timeline, Faq and Chapters. Brief, Decree, Bugle, Prizes,
+  Cta, Tape and Footer are server components and ship no JS of their own.
+
+### The image pipeline is unchanged and still required
+
+`tools/optimize-assets.py` trims transparent margins, resizes to a per-role cap
+and exports WebP q80. Re-run it after adding or replacing any render:
+
+```bash
+npm run assets
+```
+
+Originals in `assets/` are never touched; output goes to `public/assets/opt/`.
+Use `npm run assets:report` to preview sizes without writing.
+
+`next/image` is deliberately **not** used — it cannot crop transparent margins,
+which is where most of the 95.5% saving comes from. Every `<img>` carries
+explicit `width`/`height`, so there is no layout shift to solve either.
+
+> **One easy win left:** `public/assets/logos/itss_nirma.png` is a 500x500 PNG
+> at 103 KB — a fifth of the image payload for one small logo. Converting it to
+> WebP would cut it to roughly 10 KB.
 
 ---
 
 ## Design system
 
-### Palette
-
-Merged from the implementation plan's doomsday palette with the LEGO brick colours already in use.
+### Palette — `styles/tokens.css`
 
 | Token | Hex | Use |
 | --- | --- | --- |
@@ -53,9 +122,11 @@ Merged from the implementation plan's doomsday palette with the LEGO brick colou
 | `--radiation` | `#39FF14` | Cyber track accent |
 | `--ink` | `#F0EDE8` | Body text |
 
-The page ground is near-black with a **LEGO stud grid** (a 24px repeating radial-gradient) plus three fixed ember/lava/radiation washes, so it reads as a lit baseplate rather than flat black.
+The page ground is near-black with a **LEGO stud grid** (a 24px repeating
+radial-gradient) plus three fixed ember/lava/radiation washes, so it reads as a
+lit baseplate rather than flat black.
 
-### Type — unchanged, as requested
+### Type
 
 | Role | Font |
 | --- | --- |
@@ -66,100 +137,82 @@ The page ground is near-black with a **LEGO stud grid** (a 24px repeating radial
 | Newsprint accents | **Special Elite** |
 | Body copy | **Archivo** |
 
-Hero headings get a chunky plastic emboss via stacked `text-shadow` rather than an image.
+Hero headings get a chunky plastic emboss via stacked `text-shadow` rather than
+an image.
+
+**Pixelify Sans has a broken `fl` ligature** and every pixel-set selector must
+be listed in the ligature rule at the top of `styles/tokens.css`. See
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## How the parallax works
 
-Two systems, one engine, in `js/main.js`:
+Two systems, one hook — `lib/hooks/useParallax.ts`:
 
-- **Hero diorama** — eight transparent planes (`lava-ground-glow`, `lego-cloud`, both skyscrapers, `rubble-ground`, `hazmat-scientist`, `leaking-barrel`, `flying-bricks`), each with a `data-depth` from 6 to 52. Deeper planes move further, so pointer movement produces real depth. Max shift is ~23px — noticeable without being nauseating.
-- **Track cards** — each card is its own mini diorama with 3–4 planes and a 1.4× multiplier, tracking only its own bounds.
+- **Hero diorama** (`content/hero.ts`) — nine transparent planes with a depth
+  from 6 to 52. Deeper planes move further, so pointer movement produces real
+  depth. Max shift is ~23px. Tracks the whole window.
+- **Track cards** (`content/tracks.ts`) — each card is its own mini diorama with
+  3-4 planes and a 1.4x multiplier, tracking only its own bounds.
 
-Two rules make this robust:
+Parallax writes to the **`translate`** property, not `transform`, so it composes
+with the idle keyframes instead of fighting them. It is skipped entirely on
+touch devices and under `prefers-reduced-motion`.
 
-1. **Parallax writes to the `translate` property, not `transform`.** The planes already use `transform` for their idle keyframes (sway, bob, tumble). These are separate CSS properties that compose, so the two never fight.
-2. **Base positioning avoids centring transforms.** Hero planes use `left: (100 - width) / 2` rather than `left:50%; transform:translateX(-50%)`, which keeps `transform` free for the animations.
-
-Adding a plane needs no JS change — drop in an `<img class="pl" data-depth="N">`.
-
-Parallax is skipped entirely on touch devices and under `prefers-reduced-motion`.
-
----
-
-## Gotcha: Pixelify Sans has a broken `fl` ligature
-
-It renders `fl` as a single blank-ish glyph, so "floor" came out as "Aoor". Measured: `fl` is 23px with ligatures on vs 30px off. Every pixel-set element therefore carries:
-
-```css
-font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0;
-```
-
-If you add a new heading in the pixel face, add its selector to that rule near the top of `css/style.css` — otherwise any word containing `fl`, `fi` or `ffi` may break.
-
-The wordmark splits for the same reason: "IEEE" in Pixelify reads as gibberish at nav size, so it is `Hack` in pixel + `IEEE` in spaced Silkscreen.
+Adding a plane needs no code change — add an entry to the content file.
 
 ---
 
 ## Content states
 
-Every element that animates in is hidden by CSS and revealed when script adds `.in`. Both halves are gated:
+Every element that animates in is hidden by CSS and revealed when script adds
+`.in`. The gating rule is `.js [data-reveal]:not(.in){opacity:0}` and **both
+halves are load-bearing** — see CONTRIBUTING for why.
 
-```css
-.js [data-reveal]:not(.in){opacity:0}
-```
-
-- **`:not(.in)`, never a bare hide rule.** A plain hide rule can outrank the reveal rule on specificity and strand the element invisible forever. `:not(.in)` means the hide rule simply stops matching.
-- **`.js` gating.** `<head>` runs `document.documentElement.classList.add('js')`. If the script fails, no hide rules match and the page renders fully visible.
-
-The dock studs are generated from the dock's width via a `ResizeObserver`, so the count keeps LEGO's real gap-to-stud ratio (~0.67) at any size — 26 studs at 1280px, 8 at 375px.
-
----
-
-## Structure
-
-```
-├── index.html            # single long-scroll page
-├── css/style.css         # tokens, layout, animation
-├── js/main.js            # parallax, reveals, countdown, nav, rail
-├── tools/
-│   └── optimize-assets.py
-└── assets/
-    ├── *.png             # source renders (never shipped)
-    ├── opt/*.webp        # optimised, what the page actually loads
-    └── logos/            # itss_nirma.png · cs.png and sps.png pending
-```
-
-Sections: hero → hazard tape → brief → **decree** (Doom) → tracks → timeline → **the daily build** (web-slinger) → prizes → organisers → FAQ → register.
+The dock studs are generated from the dock width via a `ResizeObserver`, so the
+count keeps the real LEGO gap-to-stud ratio (~0.67) at any size — 26 studs at
+1280px, 8 at 375px.
 
 ---
 
 ## Placeholders to replace
 
-- **Dates** — 21–23 Dec 2026. Note **21 Dec 2026 is a Monday**, so this runs Mon–Wed, not a weekend; the hero says "build sprint" rather than "weekend" for that reason. The 36-hour window is exact: Mon 19:00 + 36h = Wed 07:00 freeze. The registration-open (02 Nov) and shortlist (07 Dec) dates are invented. Tagged with `data-field` — `grep -n 'data-field' index.html`.
-- **Prizes** — dummy figures that balance exactly: 75,000 + 40,000 + 20,000 + (4 × 10,000) = **₹1,75,000**. If you change a tier, update the pool headline.
-- **CS and SPS logos** — drop `cs.png` and `sps.png` into `assets/logos/` and the "pending" placeholders disappear automatically.
-- **Registration and rulebook links** — the buttons in `#register` point at `#`.
-- **Partner slots**, **contact email**, **social links**.
+Everything below lives in `content/` and is marked PLACEHOLDER in-file.
+
+- **`content/event.ts`** — `siteUrl` (currently `hackieee.example.org`, used to
+  resolve the og:image), `registerUrl` and `rulebookUrl` (both `#`),
+  `registrationClosesLabel`, and the social links.
+- **`content/schedule.ts`** — the registration-open (02 Nov) and shortlist
+  (07 Dec) dates are invented. The rest are real: **21 Dec 2026 is a Monday**,
+  so this runs Mon-Wed, not a weekend — the hero says "build sprint" for that
+  reason — and the 36-hour window is exact (Mon 19:00 + 36h = Wed 07:00 freeze).
+- **`content/prizes.ts`** — dummy figures totalling **Rs 1,75,000**. The pool
+  headline is now computed from the tiers, so changing an amount can no longer
+  desync the total.
+- **`content/organisers.ts`** — partner slots. Also **CS and SPS logos**: drop
+  `cs.png` and `sps.png` into `public/assets/logos/` and the lettermark
+  placeholders disappear automatically.
 
 ---
 
-## Decisions taken from the implementation plan
+## Open questions
 
-The plan was written for a different project ("Hackify", 7 pages, 5 tracks). What was adopted and what was not:
+**Payload.** If this stays a marketing site and never grows a registration flow
+or an organiser dashboard, **Astro would be the better fit** — same component
+structure and the same `content/` split, but it ships zero JS by default and
+hydrates only the interactive islands, which would land close to the original
+20 KB. Next was chosen to keep the door open for the app half. If that half is
+never happening, the choice is worth revisiting.
 
-| Plan said | Built | Why |
-| --- | --- | --- |
-| 7 separate pages | **One long-scroll page** | Faster, one payload, better for a landing page. Splitting later is easy. |
-| 5 tracks incl. "Custom" | **4 tracks** | Your four tracks, and no assets exist for a fifth. |
-| Per-track `<canvas>` particle systems | **Not built** | Five always-running canvases is exactly the cost you asked to avoid. CSS scan sweeps give similar energy for free. |
-| `perspective: 800px` card containers | **2D layers only** | Same visual depth, no 3D compositing cost. |
-| Name "Hackify" | **HackIEEE** | Your event. |
-| Boogaloo / Fredoka / Inter | **Existing fonts kept** | You asked to keep them. |
+**Fonts.** Still loaded from Google Fonts via `<link>` (176 KB, unchanged from
+the original). `next/font` would self-host and remove the extra connection, but
+it changes how the faces load and the Pixelify ligature workaround would need
+re-verifying afterwards. Not done as part of this migration.
 
 ---
 
 ## Note on trademarks
 
-A student-run event site. **Not affiliated with, endorsed by or sponsored by the LEGO Group or Marvel / The Walt Disney Company.** The footer disclaimer should stay.
+A student-run event. **Not affiliated with, endorsed by or sponsored by the LEGO
+Group or Marvel / The Walt Disney Company.** The footer disclaimer should stay.

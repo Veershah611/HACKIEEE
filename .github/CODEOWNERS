@@ -1,0 +1,9 @@
+# Every PR gets a review from the core team by default.
+# Replace these with real GitHub handles before enabling branch protection.
+
+# *                 @your-org/hackieee-core
+
+# Narrower ownership so content edits are not blocked on a dev:
+# /content/         @your-org/hackieee-content
+# /styles/          @your-org/hackieee-design
+# /lib/ /components/ @your-org/hackieee-dev

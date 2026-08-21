@@ -1,0 +1,44 @@
+/* =====================================================================
+   PRIZES
+   ===================================================================== */
+.prizes {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 1px;
+	background: var(--line);
+	border: 1px solid var(--line);
+	border-radius: 6px;
+	overflow: hidden;
+	margin-top: clamp(38px, 5vw, 64px);
+}
+.prizes article {
+	background: var(--ash);
+	padding: clamp(22px, 2.6vw, 32px);
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	transition: background 0.35s;
+}
+.prizes article:hover {
+	background: var(--ash-2);
+}
+.prizes em {
+	font-family: var(--f-micro);
+	font-style: normal;
+	font-size: 10.5px;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+.prizes b {
+	font-family: var(--f-pixel);
+	font-weight: 700;
+	font-size: clamp(24px, 2.9vw, 36px);
+	line-height: 1.1;
+	color: var(--hazard);
+}
+.prizes p {
+	color: var(--muted);
+	font-size: 13.5px;
+	line-height: 1.55;
+}

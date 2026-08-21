@@ -10,7 +10,7 @@ above ~700 CSS px, so this script:
   2. resizes to a cap chosen per role (see ROLES),
   3. exports WebP with alpha at quality 80.
 
-Originals in assets/ are never modified. Output goes to assets/opt/.
+Originals in assets/ are never modified. Output goes to public/assets/opt/.
 Re-run after adding or replacing any source render:
 
     python tools/optimize-assets.py
@@ -28,7 +28,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 SRC = os.path.join(ROOT, 'assets')
-OUT = os.path.join(SRC, 'opt')
+OUT = os.path.join(ROOT, 'public', 'assets', 'opt')
 
 QUALITY = 80
 
@@ -151,7 +151,7 @@ def main():
     print('TOTAL  %.2f MB  ->  %.2f MB   (%.1f%% smaller, %d files)'
           % (tb / 1048576, ta / 1048576, (1 - ta / tb) * 100 if tb else 0, len(results)))
     if not report_only:
-        print('Written to assets/opt/')
+        print('Written to public/assets/opt/')
     return 0
 
 

@@ -1,0 +1,38 @@
+/* =====================================================================
+   HAZARD TAPE MARQUEE
+   ===================================================================== */
+.tape {
+	position: relative;
+	z-index: 4;
+	overflow: hidden;
+	border-block: 3px solid var(--void);
+	background: repeating-linear-gradient(
+		135deg,
+		var(--hazard) 0 28px,
+		#171008 28px 56px
+	);
+	padding-block: 11px;
+}
+.tape__run {
+	display: flex;
+	width: max-content;
+	animation: slide 26s linear infinite;
+	gap: 26px;
+	align-items: center;
+}
+.tape__run span {
+	font-family: var(--f-pixel);
+	font-weight: 700;
+	font-size: clamp(15px, 1.9vw, 22px);
+	color: var(--void);
+	white-space: nowrap;
+}
+.tape__run b {
+	color: var(--ember);
+	font-size: 0.7em;
+}
+@keyframes slide {
+	to {
+		transform: translateX(-33.333%);
+	}
+}

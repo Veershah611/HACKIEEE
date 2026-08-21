@@ -1,0 +1,243 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+/* Pixelify Sans ships a broken `fl` ligature, which turned "floor" into
+   "Aoor". Disabling ligatures on every pixel-set element fixes it. */
+.h2,
+.hero__line,
+.cta__h,
+.stats b,
+.prizes b,
+.countdown b,
+.stop h3,
+.faq summary,
+.brand__txt,
+.drawer a,
+.chapters h3,
+.bugle__masthead {
+	font-variant-ligatures: none;
+	font-feature-settings:
+		"liga" 0,
+		"clig" 0;
+}
+html {
+	scroll-behavior: smooth;
+	-webkit-text-size-adjust: 100%;
+}
+
+/* baseplate: stud grid + ember lighting over near-black */
+body {
+	color: var(--ink);
+	font-family: var(--f);
+	font-size: 16px;
+	line-height: 1.65;
+	overflow-x: hidden;
+	-webkit-font-smoothing: antialiased;
+	background-color: var(--void);
+	background-image:
+		radial-gradient(
+			circle at 1px 1px,
+			rgba(240, 237, 232, 0.045) 1px,
+			transparent 0
+		),
+		radial-gradient(
+			ellipse 60% 40% at 50% 0%,
+			rgba(255, 78, 0, 0.2),
+			transparent 62%
+		),
+		radial-gradient(
+			ellipse 50% 36% at 88% 30%,
+			rgba(255, 140, 0, 0.11),
+			transparent 64%
+		),
+		radial-gradient(
+			ellipse 54% 38% at 8% 74%,
+			rgba(57, 255, 20, 0.06),
+			transparent 66%
+		);
+	background-size:
+		24px 24px,
+		auto,
+		auto,
+		auto;
+	background-attachment: fixed;
+}
+img {
+	max-width: 100%;
+	display: block;
+	height: auto;
+}
+a {
+	color: inherit;
+	text-decoration: none;
+}
+ul,
+ol {
+	list-style: none;
+}
+button {
+	font: inherit;
+	color: inherit;
+	background: none;
+	border: 0;
+	cursor: pointer;
+}
+summary::-webkit-details-marker {
+	display: none;
+}
+::selection {
+	background: var(--ember);
+	color: var(--void);
+}
+
+.wrap {
+	width: 100%;
+	max-width: var(--maxw);
+	margin-inline: auto;
+	padding-inline: var(--pad);
+}
+.sec {
+	padding-block: var(--sec-y);
+	position: relative;
+	overflow: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 9px;
+}
+::-webkit-scrollbar-track {
+	background: var(--void);
+}
+::-webkit-scrollbar-thumb {
+	background: rgba(240, 237, 232, 0.16);
+}
+::-webkit-scrollbar-thumb:hover {
+	background: var(--ember);
+}
+
+/* ---------------------------------------------------------- typography */
+.tag {
+	font-family: var(--f-micro);
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--ember);
+	margin-bottom: 20px;
+}
+.h2 {
+	font-family: var(--f-pixel);
+	font-weight: 600;
+	font-size: clamp(23px, 3.1vw, 40px);
+	line-height: 1.24;
+	max-width: 22ch;
+}
+.h2--wide {
+	max-width: none;
+}
+.sub {
+	color: var(--muted);
+	font-size: clamp(15px, 1.4vw, 18px);
+	max-width: 54ch;
+	margin-top: 16px;
+}
+.sub b {
+	color: var(--hazard);
+	font-weight: 600;
+}
+.prose p,
+.prose-p {
+	color: var(--muted);
+	font-size: clamp(15px, 1.35vw, 17px);
+	margin-bottom: 16px;
+	max-width: 56ch;
+}
+.prose b {
+	color: var(--ink);
+	font-weight: 600;
+}
+.grid2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: clamp(28px, 6vw, 80px);
+	align-items: start;
+	margin-top: 8px;
+}
+
+/* reveal — gated on .js so a script failure still renders everything */
+[data-reveal],
+[data-stage] {
+	transition:
+		opacity 0.8s var(--ease),
+		transform 0.8s var(--ease);
+}
+.js [data-reveal]:not(.in) {
+	opacity: 0;
+	transform: translateY(20px);
+}
+.js [data-stage]:not(.in) {
+	opacity: 0;
+	transform: translateY(18px);
+}
+
+/* -------------------------------------------------------------- buttons */
+.btn {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px 22px;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	font-family: var(--f-micro);
+	font-size: 12px;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	white-space: nowrap;
+	transition:
+		transform 0.16s var(--ease),
+		box-shadow 0.3s,
+		background 0.3s,
+		color 0.3s,
+		border-color 0.3s;
+}
+.btn--lg {
+	padding: 16px 30px;
+	font-size: 13px;
+}
+/* brick press — buttons sit on a lip and push into it */
+.btn--ember {
+	background: linear-gradient(180deg, var(--lava), var(--ember));
+	color: #160600;
+	box-shadow:
+		0 5px 0 #a33100,
+		0 12px 26px rgba(255, 78, 0, 0.34);
+}
+.btn--ember:hover {
+	box-shadow:
+		0 5px 0 #a33100,
+		0 14px 34px rgba(255, 78, 0, 0.5);
+}
+.btn--ember:active {
+	transform: translateY(5px);
+	box-shadow:
+		0 0 0 #a33100,
+		0 6px 14px rgba(255, 78, 0, 0.34);
+}
+.btn--ghost {
+	border-color: var(--line);
+	color: var(--ink);
+	box-shadow: 0 5px 0 rgba(240, 237, 232, 0.08);
+}
+.btn--ghost:hover {
+	border-color: var(--hazard);
+	color: var(--hazard);
+}
+.btn--ghost:active {
+	transform: translateY(5px);
+	box-shadow: 0 0 0 rgba(240, 237, 232, 0.08);
+}
