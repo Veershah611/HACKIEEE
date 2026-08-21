@@ -1,5 +1,7 @@
+import { Figure } from '@/components/ui/Figure';
 import { WebBackdrop } from '@/components/ui/WebBackdrop';
 import { WebSlingerFigure } from '@/components/ui/WebSlingerFigure';
+import { figures } from '@/content/figures';
 
 export function Bugle() {
   return (
@@ -37,7 +39,11 @@ export function Bugle() {
           </div>
         </div>
         <div className="bugle__fig" data-reveal>
-          <WebSlingerFigure />
+          <Figure
+            figure={figures.webSlinger}
+            className="fig--web"
+            fallback={<WebSlingerFigure />}
+          />
         </div>
       </div>
     </section>

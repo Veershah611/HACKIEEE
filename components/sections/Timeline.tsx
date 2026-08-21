@@ -6,7 +6,7 @@ import { useDragScroll } from '@/lib/hooks/useDragScroll';
 
 export function Timeline() {
   const road = useRef<HTMLDivElement>(null);
-  useDragScroll(road);
+  const { ratio, visible, scrollable } = useDragScroll(road);
 
   return (
     <section className="sec sec--timeline" id="timeline">
@@ -41,8 +41,27 @@ export function Timeline() {
           ))}
         </div>
       </div>
-      <div className="wrap">
-        <p className="road__hint" aria-hidden="true">
+
+      {/*
+        The rail hides its native scrollbar to keep the road surface clean,
+        which left no cue that it slides. This is that cue: a brick-style track
+        with a thumb sized to the visible fraction. Hidden entirely when
+        everything already fits, so it never lies about being scrollable.
+      */}
+      <div className="wrap road__foot">
+        {scrollable && (
+          <div className="railbar" aria-hidden="true">
+            <span
+              className="railbar__thumb"
+              style={{
+                width: `${visible * 100}%`,
+                // travel across the leftover track, not the whole width
+                left: `${ratio * (1 - visible) * 100}%`,
+              }}
+            />
+          </div>
+        )}
+        <p className="road__hint">
           drag <b>{'//'}</b> scroll sideways
         </p>
       </div>

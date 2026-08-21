@@ -61,6 +61,19 @@ parallax reads `data-depth` off the DOM.
 then reference `/assets/opt/<kebab-name>.webp`. Never reference `assets/*.png`
 directly; those are 48 MB of source that must not ship.
 
+**Replace a character figure with a render** — Doom and the web-slinger are
+hand-drawn flat SVG, which reads as a different medium from the photoreal LEGO
+renders. Swapping in a render is a one-line change in `content/figures.ts`:
+
+1. Drop the transparent PNG in `assets/`, run `npm run assets`.
+2. Uncomment and set `image` (plus `width`/`height` from the optimiser output).
+
+`components/ui/Figure.tsx` renders the image when `image` is set and falls back
+to the vector otherwise, so no section component changes.
+
+**Add a new character** — same as above: add an entry to `content/figures.ts`,
+render it with `<Figure>`, and give it a `.fig--<name>` sizing rule.
+
 ---
 
 ## Things that will bite you
@@ -97,6 +110,16 @@ is most of our audience. Please keep it that way.
 **Section CSS is global, not CSS Modules.** `styles/sections/*.css` are imported
 in page order in `app/layout.tsx` and the cascade depends on that order. If you
 add a section stylesheet, insert the import in the right position.
+
+**Watch specificity when adding element selectors.** A blanket
+`.decree__art img` rule (0,1,1) silently outranked `.decree__bomb` (0,1,0) and
+sized the bomb at 80% of its box instead of 36%, burying the figure next to it
+for months. Prefer a class on the element over a descendant element selector.
+
+**Breakpoints are 900 / 640 / 420.** 900 drops to single column and swaps the
+nav for the drawer; 640 is the phone pass; 420 is small phones. Test at 375px —
+that is where the type scale is tightest. Section headings must stay larger
+than the card titles and figures they introduce.
 
 ---
 

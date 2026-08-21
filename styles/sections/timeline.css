@@ -110,11 +110,44 @@
 	font-size: 13.5px;
 	line-height: 1.55;
 }
+
+/* ---------------------------------------------------------------------
+   RAIL INDICATOR
+   The rail hides its native scrollbar to keep the road surface clean, so
+   this is the only cue that it slides. Styled as a brick track with a
+   sliding stud rather than a browser scrollbar.
+   --------------------------------------------------------------------- */
+.road__foot {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-top: 14px;
+}
+.railbar {
+	position: relative;
+	flex: 1;
+	height: 8px;
+	border-radius: 4px;
+	background: rgba(240, 237, 232, 0.09);
+	overflow: hidden;
+}
+.railbar__thumb {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	border-radius: 4px;
+	background: linear-gradient(180deg, var(--lava), var(--ember));
+	box-shadow: 0 0 12px rgba(255, 78, 0, 0.55);
+	min-width: 32px;
+	/* left/width come from the hook; easing keeps drags from looking jumpy */
+	transition: left 0.12s linear;
+}
 .road__hint {
+	flex: none;
 	font-family: var(--f-micro);
-	font-size: 10px;
+	font-size: 11px;
 	letter-spacing: 0.14em;
-	color: var(--faint);
+	color: var(--muted);
 	text-align: right;
 }
 .road__hint b {
