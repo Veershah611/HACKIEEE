@@ -1,343 +1,26 @@
 /* =====================================================================
    HackIEEE 2026 — interaction layer
-   Vanilla JS, no dependencies.
+   Vanilla JS, no dependencies, no build step.
 
-   The centrepiece is a real 3D LEGO brick built from CSS transforms:
-   six faces forming a cuboid, plus studs made of a top disc and a
-   segmented cylinder wall. Geometry is generated here so bricks can be
-   described declaratively as {cols, rows, colour, level}.
+   Everything here is deliberately 2D. Parallax writes to the `translate`
+   property rather than `transform`, so it composes with the CSS keyframe
+   transforms (sway, bob, tumble) instead of fighting them.
    ===================================================================== */
 (function () {
   'use strict';
 
-  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  /* =====================================================================
-     BRICK GEOMETRY
-     ===================================================================== */
-
-  var BRICK_H = 1.2;   // brick height in stud pitches (real LEGO ratio)
-  var STUD_D  = 0.62;  // stud diameter
-  var STUD_H  = 0.20;  // stud height
-  var SEGMENTS = 8;    // sides used to fake each stud cylinder
-
-  function el(cls, css) {
-    var n = document.createElement('div');
-    n.className = cls;
-    if (css) n.style.cssText = css;
-    return n;
-  }
-
-  /**
-   * Build one brick as a six-faced cuboid with studs on top.
-   * @param {object} spec  {cols, rows, color, u, skipStuds:[{x,z,w,d}]}
-   * @returns {HTMLElement} positioned at its own centre
-   */
-  function makeBrick(spec) {
-    var u = spec.u;
-    var w = spec.cols * u;          // x
-    var d = spec.rows * u;          // z
-    var h = BRICK_H * u;            // y
-
-    var brick = el('brick');
-    brick.style.setProperty('--c', spec.color);
-
-    // ---- six faces -------------------------------------------------
-    var faces = [
-      ['front',  w, h, 'translateZ(' + (d / 2) + 'px)'],
-      ['back',   w, h, 'rotateY(180deg) translateZ(' + (d / 2) + 'px)'],
-      ['right',  d, h, 'rotateY(90deg) translateZ(' + (w / 2) + 'px)'],
-      ['left',   d, h, 'rotateY(-90deg) translateZ(' + (w / 2) + 'px)'],
-      ['top',    w, d, 'rotateX(90deg) translateZ(' + (h / 2) + 'px)'],
-      ['bottom', w, d, 'rotateX(-90deg) translateZ(' + (h / 2) + 'px)']
-    ];
-
-    faces.forEach(function (f) {
-      brick.appendChild(el(
-        'face face--' + f[0],
-        'width:' + f[1] + 'px;height:' + f[2] + 'px;' +
-        'transform:translate(-50%,-50%) ' + f[3] + ';'
-      ));
-    });
-
-    // ---- studs -----------------------------------------------------
-    var sd = STUD_D * u, sh = STUD_H * u, rad = sd / 2;
-    var segW = (2 * Math.PI * rad / SEGMENTS) * 1.08;   // slight overlap hides seams
-
-    for (var c = 0; c < spec.cols; c++) {
-      for (var r = 0; r < spec.rows; r++) {
-        var sx = (c - (spec.cols - 1) / 2) * u;
-        var sz = (r - (spec.rows - 1) / 2) * u;
-
-        // skip studs that the next brick up sits on — they are invisible
-        if (isCovered(sx, sz, spec.skipStuds)) continue;
-
-        var stud = el('stud', 'transform:translate3d(' + sx + 'px,' + (-h / 2) + 'px,' + sz + 'px);');
-
-        stud.appendChild(el(
-          'stud__top',
-          'width:' + sd + 'px;height:' + sd + 'px;' +
-          'transform:translate(-50%,-50%) translateY(' + (-sh) + 'px) rotateX(90deg);'
-        ));
-
-        var wall = el('stud__wall');
-        for (var i = 0; i < SEGMENTS; i++) {
-          wall.appendChild(el('seg',
-            'width:' + segW + 'px;height:' + sh + 'px;' +
-            'transform:translate(-50%,-50%) translateY(' + (-sh / 2) + 'px) ' +
-            'rotateY(' + (i * 360 / SEGMENTS) + 'deg) translateZ(' + rad + 'px);'
-          ));
-        }
-        stud.appendChild(wall);
-        brick.appendChild(stud);
-      }
-    }
-
-    return brick;
-  }
-
-  function isCovered(x, z, boxes) {
-    if (!boxes) return false;
-    for (var i = 0; i < boxes.length; i++) {
-      var b = boxes[i];
-      if (x > b.x - b.w / 2 - 0.01 && x < b.x + b.w / 2 + 0.01 &&
-          z > b.z - b.d / 2 - 0.01 && z < b.z + b.d / 2 + 0.01) return true;
-    }
-    return false;
-  }
-
-  /**
-   * Stack several bricks, bottom level first, and return their elements.
-   * Each spec: {cols, rows, color, x, z} where x/z are stud-pitch offsets.
-   */
-  function buildStack(host, specs, u) {
-    host.innerHTML = '';
-    var h = BRICK_H * u;
-    var levels = specs.length;
-    var made = [];
-
-    specs.forEach(function (s, i) {
-      var above = specs[i + 1];
-      var skip = above ? [{
-        x: (above.x || 0) * u,
-        z: (above.z || 0) * u,
-        w: above.cols * u,
-        d: above.rows * u
-      }] : null;
-
-      var brick = makeBrick({
-        cols: s.cols, rows: s.rows, color: s.color, u: u, skipStuds: skip
-      });
-
-      // level 0 sits at the bottom; the whole stack is centred on the origin.
-      // CSS +Y points down, so level 0 takes the largest positive offset.
-      var ty = (levels * h) / 2 - (i + 0.5) * h;
-      var tx = (s.x || 0) * u;
-      var tz = (s.z || 0) * u;
-      var t = 'translate3d(' + tx + 'px,' + ty + 'px,' + tz + 'px)';
-
-      brick.style.transform = t;
-      brick.dataset.rest = t;
-      host.appendChild(brick);
-      made.push(brick);
-    });
-
-    return made;
-  }
-
-  /* =====================================================================
-     HERO STACK + INTRO
-     ===================================================================== */
-
-  // bottom → top. Colours are the LEGO Marvel character palette.
-  var HERO_SPEC = [
-    { cols: 6, rows: 3, color: '#0A3463', x: 0,    z: 0 },   // Dark Blue
-    { cols: 4, rows: 2, color: '#C91A09', x: -0.5, z: 0.5 }, // Bright Red
-    { cols: 3, rows: 2, color: '#F2CD37', x: 0.5,  z: -0.5 },// Bright Yellow
-    { cols: 2, rows: 2, color: '#0055BF', x: -0.5, z: 0 },   // Bright Blue
-    { cols: 2, rows: 2, color: '#4B9F4A', x: 1,    z: 0.5 }  // Bright Green
-  ];
-
-  function heroUnit() {
-    var w = innerWidth;
-    if (w < 560) return 22;
-    if (w < 900) return 28;
-    if (w < 1200) return 30;
-    return 36;
-  }
-
-  function hero() {
-    var stack = $('#stack'), stage = $('#stage'), intro = $('#intro');
-    if (!stack) return;
-
-    var bricks = buildStack(stack, HERO_SPEC, heroUnit());
-
-    // rebuild on resize so the stack scales with the layout
-    var rw = innerWidth;
-    addEventListener('resize', function () {
-      if (Math.abs(innerWidth - rw) < 60) return;
-      if (document.body.classList.contains('intro-active')) return;  // don't cut the build short
-      rw = innerWidth;
-      buildStack(stack, HERO_SPEC, heroUnit());
-      stack.classList.add('live');
-    }, { passive: true });
-
-    // Skip the intro outright when it cannot be shown properly: reduced
-    // motion, no Web Animations support, or a tab that starts hidden
-    // (browsers freeze the document timeline there, so the choreography
-    // would otherwise queue up and replay at the wrong moment on focus).
-    if (reduced || !intro || document.hidden || typeof stage.animate !== 'function') {
-      finish();
-      return;
-    }
-
-    document.body.classList.add('intro-active', 'staged');
-
-    var stepEl = $('#introStep'), barEl = $('#introBar');
-
-    /* ------------------------------------------------------------------
-       Choreography follows the Classic Space site's motion vocabulary:
-       one long, slow camera move (its hero uses a 3s zoom) while pieces
-       drift in from a long way off and settle. Nothing snaps or ticks —
-       the entries overlap heavily so it reads as a single flowing shot.
-       ------------------------------------------------------------------ */
-    var SOFT = 'cubic-bezier(.16,1,.3,1)';   // long, heavily eased settle
-    var STAGGER = 210;                       // gap between brick entries
-    var FLIGHT  = 1300;                      // one brick's travel time
-    var CAMERA  = 3700;                      // full zoom-out
-    var LANDED  = (bricks.length - 1) * STAGGER + FLIGHT;
-
-    // where the stack has to sit for the build, vs its layout slot
-    var r = stage.getBoundingClientRect();
-    var dx = (innerWidth / 2) - (r.left + r.width / 2);
-    var dy = (innerHeight / 2) - (r.top + r.height / 2);
-    var near = innerWidth < 900 ? 1.35 : 1.75;   // opening zoom level
-
-    stage.classList.add('building');
-
-    /* Every animation below uses fill:'backwards', never 'both'. The
-       finished state of the model is its ordinary CSS/inline state, so the
-       animations are a purely transient departure from it. If the document
-       timeline is ever stalled or interrupted — a backgrounded tab during
-       load, say — the page still settles on the fully built model rather
-       than being stuck on an invisible first keyframe. */
-
-    // camera: start close on the baseplate, pull back the whole time, then
-    // glide across to the layout position on the same curve
-    var cam = stage.animate([
-      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + near + ')', easing: SOFT, offset: 0 },
-      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(1.05)', easing: 'cubic-bezier(.6,0,.3,1)', offset: .66 },
-      { transform: 'translate(0px,0px) scale(1)', offset: 1 }
-    ], { duration: CAMERA, fill: 'backwards' });
-
-    // the model turns towards the viewer as it is assembled, finishing on
-    // exactly the angle .stack rests at, so the handover to the idle sway
-    // is seamless
-    var turn = stack.animate([
-      { transform: 'rotateX(-4deg) rotateY(-96deg)' },
-      { transform: 'rotateX(-22deg) rotateY(-34deg)' }
-    ], { duration: CAMERA * .86, easing: SOFT, fill: 'backwards' });
-
-    // each brick arrives from its own direction, from a long way out
-    var VECTORS = [
-      { x: -640, y: -230, z: -260, rz: -18, ry:  46 },
-      { x:  600, y: -330, z: -180, rz:  15, ry: -40 },
-      { x: -500, y: -430, z: -220, rz: -12, ry:  32 },
-      { x:  540, y: -390, z: -160, rz:  11, ry: -28 },
-      { x:  -70, y: -580, z: -300, rz:  -6, ry:  20 }
-    ];
-
-    var flights = bricks.map(function (b, i) {
-      var rest = b.dataset.rest;
-      var v = VECTORS[i % VECTORS.length];
-
-      var a = b.animate([
-        { offset: 0, opacity: 0,
-          transform: rest + ' translate3d(' + v.x + 'px,' + v.y + 'px,' + v.z + 'px)' +
-                     ' rotateZ(' + v.rz + 'deg) rotateY(' + v.ry + 'deg)' },
-        { offset: .35, opacity: 1 },
-        { offset: .88, opacity: 1,
-          transform: rest + ' translate3d(0,-9px,0) rotateZ(0deg) rotateY(0deg)' },
-        { offset: 1, opacity: 1, transform: rest }
-      ], { duration: FLIGHT, delay: i * STAGGER, easing: SOFT, fill: 'backwards' });
-
-      // instruction-booklet counter, driven by the animation rather than
-      // the clock so it always matches what is actually on screen
-      a.finished.then(function () {
-        if (stepEl) stepEl.textContent = String(i + 1).padStart(2, '0');
-        if (barEl) barEl.style.width = ((i + 1) / bricks.length * 100) + '%';
-      }).catch(function () {});
-
-      return a;
-    });
-
-    /* Sequencing follows the animations' own timeline, not wall-clock
-       timers — the two drift apart whenever the timeline is throttled.
-       `settle` is idempotent and force-finishes everything, so the safety
-       net below can always land the page on the finished model. */
-    var everything = flights.concat([cam, turn]);
-    var settled = false;
-
-    function settle() {
-      if (settled) return;
-      settled = true;
-      everything.forEach(function (a) { try { a.finish(); } catch (e) {} });
-      finish();
-    }
-
-    // lift the scrim once the model is complete, while the camera is
-    // still pulling back — the page arrives underneath a moving shot
-    Promise.all(flights.map(function (a) { return a.finished; })).then(function () {
-      if (settled) return;
-      intro.classList.add('done');
-      document.body.classList.remove('intro-active');
-      $('#nav').classList.add('in');
-      $$('[data-stage]').forEach(function (n, i) {
-        setTimeout(function () { n.classList.add('in'); }, 120 * i);
-      });
-    }).catch(function () {});
-
-    // hand the model over to the idle sway once the camera settles
-    cam.finished.then(settle).catch(function () {});
-
-    // safety net: if the timeline never advances, land on the built model
-    setTimeout(settle, CAMERA + LANDED + 2000);
-
-    function finish() {
-      if (intro) intro.classList.add('done');
-      document.body.classList.remove('intro-active');
-      stage.classList.remove('building');
-      stack.classList.add('live');
-      $('#nav').classList.add('in');
-      $$('[data-stage]').forEach(function (n) { n.classList.add('in'); });
-    }
-  }
-
-  /* =====================================================================
-     TRACK BRICKS — one small 3D brick per track card
-     ===================================================================== */
-  function trackBricks() {
-    $$('.track').forEach(function (card, i) {
-      var host = $('.track__brick', card);
-      if (!host) return;
-
-      var color = getComputedStyle(card).getPropertyValue('--c').trim() || '#C91A09';
-      var wrap = el('stack');
-      wrap.style.setProperty('--ry', (-34 + i * 5) + 'deg');
-      host.appendChild(wrap);
-
-      buildStack(wrap, [{ cols: 4, rows: 2, color: color, x: 0, z: 0 }], innerWidth < 560 ? 17 : 20);
-    });
-  }
+  // Change this to the real kickoff. Format: YYYY-MM-DDTHH:mm:ss+05:30
+  var EVENT_START = new Date('2026-12-21T16:00:00+05:30');
 
   /* =====================================================================
      DOCK STUDS
-     The nav brick has to keep real LEGO stud spacing at any width — a
-     fixed count leaves 96px gaps on desktop and reads as dots, not a
-     brick. Real spacing puts a gap of roughly two thirds of a stud
-     between studs, so the count is derived from the dock's width.
+     Count is derived from width so the gap-to-stud ratio stays near LEGO's
+     real 0.67 at any size — a fixed count leaves 90px gaps on desktop.
      ===================================================================== */
   function dockStuds() {
     var row = $('.dock__studs');
@@ -345,11 +28,10 @@
 
     function fill() {
       var w = row.getBoundingClientRect().width;
-      if (!w) return;
-      var pitch = innerWidth < 560 ? 36 : 43;   // stud + gap
+      if (!w) return;                       // not laid out yet — RO will call back
+      var pitch = innerWidth < 560 ? 36 : 43;
       var n = Math.max(4, Math.round(w / pitch));
-      if (+row.dataset.n === n) return;         // nothing to redraw
-
+      if (+row.dataset.n === n) return;
       row.dataset.n = n;
       row.textContent = '';
       var frag = document.createDocumentFragment();
@@ -357,8 +39,64 @@
       row.appendChild(frag);
     }
 
+    // A plain init call can run before the dock has been laid out, and then
+    // the zero-width guard would leave the brick permanently bald. Observing
+    // the row means it fills itself the moment it has a real width, and
+    // re-fills on every resize, with no polling.
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(fill).observe(row);
+    } else {
+      addEventListener('load', fill);
+      addEventListener('resize', fill, { passive: true });
+    }
     fill();
-    addEventListener('resize', fill, { passive: true });
+  }
+
+  /* =====================================================================
+     PARALLAX
+     One shared pointer listener drives every layer. Depth comes from each
+     element's data-depth, so adding a plane needs no JS change.
+     ===================================================================== */
+  function parallax() {
+    if (!fine || reduced) return;
+
+    var groups = [
+      { root: $('#diorama'), layers: $$('#diorama .pl'), scale: 1 },
+    ];
+    $$('.track').forEach(function (card) {
+      groups.push({ root: card, layers: $$('.tl', card), scale: 1.4 });
+    });
+
+    groups.forEach(function (g) {
+      if (!g.root || !g.layers.length) return;
+
+      var raf = 0, tx = 0, ty = 0;
+
+      function apply() {
+        raf = 0;
+        g.layers.forEach(function (el) {
+          var d = (parseFloat(el.dataset.depth) || 10) / 100;
+          el.style.translate = (tx * d * g.scale) + 'px ' + (ty * d * g.scale * 0.55) + 'px';
+        });
+      }
+
+      function onMove(e) {
+        var r = g.root.getBoundingClientRect();
+        tx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2) * 42;
+        ty = (e.clientY - (r.top + r.height / 2)) / (r.height / 2) * 26;
+        if (!raf) raf = requestAnimationFrame(apply);
+      }
+
+      function onLeave() {
+        tx = ty = 0;
+        if (!raf) raf = requestAnimationFrame(apply);
+      }
+
+      // the hero tracks the whole window; cards only track themselves
+      var target = g.root.id === 'diorama' ? window : g.root;
+      target.addEventListener('mousemove', onMove, { passive: true });
+      g.root.addEventListener('mouseleave', onLeave, { passive: true });
+    });
   }
 
   /* =====================================================================
@@ -376,7 +114,7 @@
         e.target.classList.add('in');
         io.unobserve(e.target);
       });
-    }, { threshold: .14, rootMargin: '0px 0px -6% 0px' });
+    }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
 
     var seen = new Map();
     items.forEach(function (n) {
@@ -389,12 +127,21 @@
   }
 
   /* =====================================================================
+     HERO STAGE-IN
+     ===================================================================== */
+  function stageIn() {
+    $('#nav').classList.add('in');
+    $$('[data-stage]').forEach(function (n, i) {
+      setTimeout(function () { n.classList.add('in'); }, reduced ? 0 : 90 * i);
+    });
+  }
+
+  /* =====================================================================
      STAT COUNTERS
      ===================================================================== */
   function counters() {
     var nums = $$('[data-count]');
     if (!nums.length) return;
-
     var settle = function (n) { n.textContent = n.dataset.count + (n.dataset.suffix || ''); };
     if (!('IntersectionObserver' in window) || reduced) { nums.forEach(settle); return; }
 
@@ -403,11 +150,8 @@
         if (!e.isIntersecting) return;
         var n = e.target;
         io.unobserve(n);
-
         var target = parseFloat(n.dataset.count), suffix = n.dataset.suffix || '';
         var t0 = performance.now(), dur = 1300, done = false;
-
-        // if rAF never runs, land on the final value anyway
         var guard = setTimeout(function () { if (!done) settle(n); }, dur + 500);
 
         requestAnimationFrame(function step(now) {
@@ -418,8 +162,32 @@
         });
       });
     }, { threshold: .5 });
-
     nums.forEach(function (n) { io.observe(n); });
+  }
+
+  /* =====================================================================
+     COUNTDOWN
+     ===================================================================== */
+  function countdown() {
+    var root = $('#countdown');
+    if (!root) return;
+    var f = {
+      d: $('[data-cd="d"]', root), h: $('[data-cd="h"]', root),
+      m: $('[data-cd="m"]', root), s: $('[data-cd="s"]', root)
+    };
+    var pad = function (v) { return String(v).padStart(2, '0'); };
+
+    function tick() {
+      var diff = EVENT_START - Date.now();
+      if (diff <= 0) { for (var k in f) f[k].textContent = '00'; return; }
+      var s = Math.floor(diff / 1000);
+      f.d.textContent = pad(Math.floor(s / 86400));
+      f.h.textContent = pad(Math.floor(s / 3600) % 24);
+      f.m.textContent = pad(Math.floor(s / 60) % 60);
+      f.s.textContent = pad(s % 60);
+    }
+    tick();
+    setInterval(tick, 1000);
   }
 
   /* =====================================================================
@@ -450,9 +218,9 @@
       });
     }
 
-    // Scroll spy from cached offsets — pure arithmetic per scroll event,
-    // so instant jumps (anchor clicks, hash loads) can't miss a threshold.
-    var links = $$('.nav__links a');
+    // Spy from cached offsets — pure arithmetic per scroll event, so instant
+    // jumps (anchor clicks, hash loads) can never miss a threshold.
+    var links = $$('.dock__links a');
     var sections = links.map(function (a) { return $(a.getAttribute('href')); }).filter(Boolean);
     if (!sections.length) return;
 
@@ -476,11 +244,41 @@
         a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
       });
     }
-
     addEventListener('scroll', spy, { passive: true });
     addEventListener('resize', function () { measure(); spy(); }, { passive: true });
     addEventListener('load', function () { measure(); spy(); });
     measure(); spy();
+  }
+
+  /* =====================================================================
+     TIMELINE RAIL — drag to scroll
+     ===================================================================== */
+  function road() {
+    var el = $('#road');
+    if (!el) return;
+    var down = false, startX = 0, startLeft = 0;
+
+    el.addEventListener('pointerdown', function (e) {
+      down = true; startX = e.clientX; startLeft = el.scrollLeft;
+      el.classList.add('drag'); el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      el.scrollLeft = startLeft - (e.clientX - startX);
+    });
+    ['pointerup', 'pointercancel'].forEach(function (evt) {
+      el.addEventListener(evt, function (e) {
+        down = false; el.classList.remove('drag');
+        try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+      });
+    });
+    // vertical wheel scrolls sideways while the rail still has runway
+    el.addEventListener('wheel', function (e) {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      var max = el.scrollWidth - el.clientWidth;
+      var next = el.scrollLeft + e.deltaY;
+      if (next > 0 && next < max) { e.preventDefault(); el.scrollLeft = next; }
+    }, { passive: false });
   }
 
   /* =====================================================================
@@ -500,17 +298,17 @@
      LOGO PLACEHOLDERS — CS and SPS marks arrive later
      ===================================================================== */
   function logoFallbacks() {
-    $$('.chapter__logo[data-fallback]').forEach(function (box) {
+    $$('.chip[data-fallback]').forEach(function (box) {
       var img = $('img', box);
       if (!img) return;
       var fail = function () { box.classList.add('empty'); };
       img.addEventListener('error', fail);
-      if (img.complete && img.naturalWidth === 0) fail();   // already failed, no event coming
+      if (img.complete && img.naturalWidth === 0) fail();  // already failed, no event coming
     });
   }
 
   /* =====================================================================
-     ANCHORS — offset for the fixed nav
+     ANCHORS — offset for the floating dock
      ===================================================================== */
   function anchors() {
     $$('a[href^="#"]').forEach(function (a) {
@@ -520,18 +318,20 @@
         var t = $(id);
         if (!t) return;
         e.preventDefault();
-        scrollTo({ top: t.getBoundingClientRect().top + scrollY - 70, behavior: reduced ? 'auto' : 'smooth' });
+        scrollTo({ top: t.getBoundingClientRect().top + scrollY - 78, behavior: reduced ? 'auto' : 'smooth' });
       });
     });
   }
 
   function init() {
-    hero();
     dockStuds();
-    trackBricks();
+    stageIn();
+    parallax();
     reveals();
     counters();
+    countdown();
     nav();
+    road();
     faq();
     logoFallbacks();
     anchors();
