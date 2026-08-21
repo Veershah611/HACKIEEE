@@ -1,0 +1,151 @@
+/* =====================================================================
+   TIMELINE — horizontal road
+   ===================================================================== */
+.sec--timeline {
+  overflow: visible;
+}
+.road {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  padding-block: 36px 30px;
+  scroll-snap-type: x proximity;
+  margin-top: clamp(30px, 4vw, 50px);
+}
+.road::-webkit-scrollbar {
+  display: none;
+}
+.road.drag {
+  cursor: grabbing;
+}
+.road__run {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  padding-inline: var(--pad);
+  position: relative;
+}
+/* the road surface itself */
+.road__run::before {
+  content: "";
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  top: 74px;
+  height: 10px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--hazard) 0 26px, transparent 26px 52px);
+  opacity: 0.5;
+}
+.stop {
+  position: relative;
+  flex: 0 0 clamp(258px, 26vw, 320px);
+  scroll-snap-align: center;
+  padding: 22px;
+  border-radius: 8px;
+  background: var(--ash);
+  border: 1px solid var(--line);
+  transition:
+    border-color 0.4s,
+    transform 0.4s var(--ease),
+    background 0.4s;
+}
+.stop:hover {
+  border-color: var(--ember);
+  transform: translateY(-6px);
+  background: var(--ash-2);
+}
+.stop > img {
+  position: absolute;
+  top: -78px;
+  left: 50%;
+  translate: -50% 0;
+  width: 58px;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.7));
+  animation: bob 4s ease-in-out infinite;
+}
+.stop__n {
+  font-family: var(--f-micro);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--ember);
+  display: block;
+}
+.stop::before {
+  content: "";
+  position: absolute;
+  left: 22px;
+  top: -16px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--void);
+  border: 3px solid var(--ember);
+  transition: background 0.3s;
+}
+.stop:hover::before {
+  background: var(--ember);
+}
+.stop h3 {
+  font-family: var(--f-pixel);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.2;
+  margin: 34px 0 6px;
+}
+.stop time {
+  display: block;
+  font-family: var(--f-micro);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  color: var(--hazard);
+  margin-bottom: 10px;
+}
+.stop p {
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+/* ---------------------------------------------------------------------
+   RAIL INDICATOR
+   The rail hides its native scrollbar to keep the road surface clean, so
+   this is the only cue that it slides. Styled as a brick track with a
+   sliding stud rather than a browser scrollbar.
+   --------------------------------------------------------------------- */
+.road__foot {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+.railbar {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(240, 237, 232, 0.09);
+  overflow: hidden;
+}
+.railbar__thumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--lava), var(--ember));
+  box-shadow: 0 0 12px rgba(255, 78, 0, 0.55);
+  min-width: 32px;
+  /* left/width come from the hook; easing keeps drags from looking jumpy */
+  transition: left 0.12s linear;
+}
+.road__hint {
+  flex: none;
+  font-family: var(--f-micro);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  text-align: right;
+}
+.road__hint b {
+  color: var(--ember);
+}

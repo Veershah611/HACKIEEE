@@ -1,0 +1,31 @@
+{
+  "name": "hackieee-2026",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HackIEEE 2026 event site — IEEE Nirma University Student Branch (CS · ITSS · SPS)",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev -p 5173",
+    "build": "next build",
+    "start": "npx serve out -l 5173",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "assets": "python tools/optimize-assets.py",
+    "assets:report": "python tools/optimize-assets.py --report"
+  },
+  "dependencies": {
+    "next": "15.5.23",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.4",
+    "@types/node": "22.15.3",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "typescript": "5.9.2"
+  }
+}

@@ -1,0 +1,141 @@
+/* =====================================================================
+   TRACKS
+   ===================================================================== */
+.tracks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: clamp(20px, 2.4vw, 30px);
+  margin-top: clamp(40px, 5vw, 68px);
+}
+.track {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--ash-2), var(--ash));
+  border: 1px solid var(--line);
+  transition:
+    transform 0.45s var(--ease),
+    border-color 0.45s,
+    box-shadow 0.45s;
+}
+.track::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--c);
+  z-index: 4;
+}
+.track:hover {
+  transform: translateY(-8px);
+  border-color: color-mix(in srgb, var(--c) 50%, transparent);
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* the diorama window */
+.track__stage {
+  position: relative;
+  height: clamp(220px, 26vw, 290px);
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 88%,
+    color-mix(in srgb, var(--c) 22%, transparent),
+    transparent 70%
+  );
+}
+.tl {
+  position: absolute;
+  bottom: -6%;
+  left: 50%;
+  transform: translateX(-50%); /* base centring */
+  will-change: translate;
+  transition: translate 0.5s cubic-bezier(0.19, 1, 0.3, 1);
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.6));
+}
+.tl {
+  width: 76%;
+  bottom: -4%;
+}
+.tl--mid {
+  width: 52%;
+  bottom: 2%;
+  left: 34%;
+}
+.tl--fg {
+  width: 46%;
+  bottom: -2%;
+  left: 62%;
+}
+.tl--float {
+  width: 88%;
+  bottom: 16%;
+  opacity: 0.9;
+}
+.track__scan {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    color-mix(in srgb, var(--c) 26%, transparent),
+    transparent
+  );
+}
+.track:hover .track__scan {
+  opacity: 1;
+  animation: sweep 2.4s linear infinite;
+}
+@keyframes sweep {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.track__info {
+  position: relative;
+  z-index: 4;
+  padding: clamp(20px, 2.4vw, 28px);
+  border-top: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(10, 10, 15, 0.86), var(--ash));
+}
+.track__n {
+  font-family: var(--f-micro);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--c);
+  margin-bottom: 8px;
+}
+.track__info h3 {
+  font-family: var(--f-comic);
+  font-size: clamp(24px, 2.6vw, 32px);
+  letter-spacing: 0.02em;
+  color: var(--c);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.track__info p {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+.track__tag {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--f-micro);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  transition: color 0.3s;
+}
+.track:hover .track__tag {
+  color: var(--c);
+}

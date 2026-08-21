@@ -1,0 +1,256 @@
+/* =====================================================================
+   RESPONSIVE
+
+   Three stops: 900px (tablet — drop to single column, swap the nav for
+   the drawer), 640px (phone), 420px (small phone).
+
+   The phone rules are not just "make it narrower". At 375px the type
+   scale had inverted — section headings bottomed out at 23px while track
+   titles and prize figures sat at 24px, so headings read as smaller than
+   the things they introduced. The 640px block re-establishes that order.
+   ===================================================================== */
+
+@media (max-width: 900px) {
+  .dock__links,
+  .dock__cta {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+  .grid2 {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .decree {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .decree__art {
+    order: -1;
+  }
+  .bugle {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .bugle__fig {
+    order: -1;
+  }
+  .bugle__cols {
+    columns: 1;
+  }
+  .bugle__web {
+    right: -40%;
+    opacity: 0.1;
+  }
+  .fig--doom {
+    max-width: 240px;
+  }
+  .fig--web {
+    max-width: 260px;
+  }
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .foot__top {
+    grid-template-columns: 1fr;
+  }
+  .foot__links {
+    text-align: left;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .drift--rock,
+  .drift--laptop {
+    display: none;
+  }
+  .diorama {
+    width: 150vw;
+    height: clamp(210px, 32vh, 320px);
+  }
+}
+
+/* ---------------------------------------------------------------- phone */
+@media (max-width: 640px) {
+  /* --- type scale: restore the heading > body order --- */
+  .h2 {
+    font-size: 27px;
+    line-height: 1.2;
+    max-width: none;
+  }
+  .track__info h3 {
+    font-size: 22px;
+  }
+  .prizes b {
+    font-size: 23px;
+  }
+  .quote {
+    font-size: 21px;
+    padding-left: 18px;
+    max-width: none;
+  }
+  .cta__h {
+    font-size: 30px;
+  }
+  .bugle__masthead {
+    font-size: 30px;
+  }
+
+  /* --- hero --- */
+  .hero {
+    /* the diorama is anchored to the bottom; reserve its height so the
+		   copy cannot land on top of the scene on short viewports */
+    min-height: auto;
+    padding-block: 116px calc(clamp(180px, 26vh, 250px) - 24px);
+  }
+  .hero__line {
+    font-size: clamp(40px, 12.5vw, 56px);
+  }
+  .eyebrow {
+    /* 2px tracking at 11px wrapped this onto two lines on a 375px screen */
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+  .hero__sub {
+    font-size: 15.5px;
+  }
+  .hero__cta {
+    width: 100%;
+    gap: 10px;
+  }
+  .hero__cta .btn {
+    flex: 1 1 100%;
+  }
+  .countdown {
+    width: 100%;
+    gap: 6px;
+  }
+  .countdown em {
+    font-size: 10px; /* was 9px — below comfortable reading */
+  }
+
+  /* --- touch targets --- */
+  .burger {
+    width: 44px;
+    height: 44px;
+  }
+  .dock__body {
+    padding: 8px 8px 8px 14px;
+  }
+
+  /* --- sections --- */
+  .sec {
+    padding-block: 68px;
+  }
+  .edicts li {
+    padding: 13px 15px;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .decree__art img.decree__bomb {
+    width: min(96px, 30%);
+    right: -2%;
+  }
+
+  /* --- tracks --- */
+  .track__stage {
+    height: clamp(200px, 52vw, 250px);
+  }
+
+  /* --- timeline --- */
+  .road__foot {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .railbar {
+    flex: 1 1 100%;
+    order: -1;
+    height: 10px; /* fatter so it reads as a control on a phone */
+  }
+  .road__hint {
+    flex: 1;
+    text-align: left;
+  }
+  .stop {
+    flex-basis: min(78vw, 280px);
+  }
+
+  /* --- organisers --- */
+  .partners__row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .partners__row span {
+    /* the 16/7 slot is 147px tall once a column is full-width, so the
+		   five slots must stay two-up and the ratio has to flatten */
+    aspect-ratio: 16 / 5;
+  }
+
+  /* --- footer --- */
+  .foot__links {
+    gap: 14px 20px;
+  }
+  .foot__links a {
+    /* these were 23px tall — the smallest tap targets on the page */
+    padding-block: 10px;
+  }
+}
+
+/* --------------------------------------------------------- small phone */
+@media (max-width: 420px) {
+  .hero {
+    padding-top: 104px;
+  }
+  .drift {
+    display: none;
+  }
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .countdown div {
+    min-width: 0;
+    flex: 1;
+    padding: 8px 4px 6px;
+  }
+  .countdown b {
+    font-size: 22px;
+  }
+  .foot__bottom {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .diorama {
+    /* 190vw pushed all but the centre of the scene off-screen */
+    width: 168vw;
+    height: clamp(170px, 24vh, 230px);
+  }
+  .h2 {
+    font-size: 25px;
+  }
+  .hero__line {
+    font-size: clamp(36px, 12vw, 46px);
+  }
+  .sec {
+    padding-block: 58px;
+  }
+}
+
+/* =====================================================================
+   MOTION PREFERENCES
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js [data-reveal]:not(.in),
+  .js [data-stage]:not(.in),
+  .js .dock:not(.in) {
+    opacity: 1;
+    transform: none;
+  }
+}

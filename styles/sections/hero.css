@@ -1,0 +1,315 @@
+/* =====================================================================
+   HERO
+   ===================================================================== */
+/* The scene is absolutely anchored to the bottom of the hero and the copy
+   sits over it, rather than the two stacking in flow — stacked, the hero
+   grew to 1391px and pushed the diorama below the fold. */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: clamp(104px, 13vh, 138px) var(--pad) 0;
+}
+.hero__glowfield {
+  position: absolute;
+  left: 50%;
+  bottom: -6%;
+  translate: -50% 0;
+  width: min(1100px, 120vw);
+  aspect-ratio: 1.6;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 78, 0, 0.3),
+    rgba(255, 140, 0, 0.1) 42%,
+    transparent 68%
+  );
+  animation: breathe 7s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+.hero__copy {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  width: 100%;
+  max-width: var(--maxw);
+}
+/* keeps the subtitle and buttons legible where they cross the diorama */
+.hero__copy::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -6%;
+  translate: -50% 0;
+  width: min(940px, 96vw);
+  height: 118%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 50%,
+    rgba(10, 10, 15, 0.82),
+    rgba(10, 10, 15, 0.45) 55%,
+    transparent 78%
+  );
+}
+.eyebrow {
+  font-family: var(--f-micro);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hazard);
+  margin-bottom: 18px;
+}
+.hero__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  line-height: 0.96;
+}
+.hero__line {
+  font-family: var(--f-pixel);
+  font-weight: 700;
+  font-size: clamp(34px, 6.6vw, 84px);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  /* chunky plastic emboss */
+  text-shadow:
+    0 3px 0 #6e2400,
+    0 6px 0 #4a1800,
+    0 9px 0 #2c0e00,
+    0 12px 26px rgba(0, 0, 0, 0.6);
+}
+.hero__line--break {
+  color: var(--lava);
+  text-shadow:
+    0 3px 0 #7a2600,
+    0 6px 0 #4a1800,
+    0 9px 0 #2c0e00,
+    0 14px 32px rgba(255, 78, 0, 0.45);
+}
+.hero__line--survive {
+  color: var(--hazard);
+  text-shadow:
+    0 3px 0 #8a6a00,
+    0 6px 0 #4e3c00,
+    0 9px 0 #2c2200,
+    0 14px 32px rgba(255, 214, 0, 0.34);
+}
+
+.hero__sub {
+  margin: 22px auto 0;
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: clamp(15px, 1.45vw, 18px);
+}
+.hero__sub b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.countdown {
+  display: flex;
+  gap: clamp(8px, 1.6vw, 20px);
+  justify-content: center;
+  margin-top: 30px;
+}
+.countdown div {
+  min-width: clamp(62px, 8vw, 92px);
+  padding: 10px 8px 8px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--ash-2), var(--ash));
+  border: 1px solid var(--line);
+  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.4);
+}
+.countdown b {
+  display: block;
+  font-family: var(--f-pixel);
+  font-weight: 700;
+  font-size: clamp(24px, 3.4vw, 40px);
+  line-height: 1;
+  color: var(--ember);
+  font-variant-numeric: tabular-nums;
+}
+.countdown em {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--f-micro);
+  font-style: normal;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* --------------------------------------------------- layered diorama */
+.diorama {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  bottom: 0;
+  z-index: 1;
+  width: min(1220px, 118vw);
+  height: clamp(250px, 40vh, 440px);
+  pointer-events: none;
+}
+.pl {
+  position: absolute;
+  bottom: 0;
+  filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.55));
+  will-change: translate;
+  transition: translate 0.5s cubic-bezier(0.19, 1, 0.3, 1);
+}
+/* left is (100 - width)/2 for the centred planes, so no centring transform
+   is needed — that keeps `transform` free for the float keyframes and
+   `translate` free for pointer parallax. */
+.pl--glow {
+  width: 40%;
+  left: 30%;
+  bottom: -8%;
+  opacity: 0.95;
+  animation: flicker 3.4s steps(3, end) infinite;
+}
+.pl--cloud {
+  width: 30%;
+  left: 35%;
+  bottom: 34%;
+  animation: rise 9s ease-in-out infinite;
+}
+.pl--bldgL {
+  width: 13%;
+  left: 20%;
+  bottom: 4%;
+  transform-origin: bottom center;
+  animation: sway 8s ease-in-out infinite;
+}
+.pl--bldgR {
+  width: 11%;
+  right: 21%;
+  bottom: 5%;
+  transform-origin: bottom center;
+  animation: sway 8s ease-in-out infinite reverse;
+}
+.pl--rubble {
+  width: 42%;
+  left: 29%;
+  bottom: -7%;
+}
+.pl--hazmat {
+  width: 7%;
+  left: 35%;
+  bottom: 9%;
+  animation: bob 4.2s ease-in-out infinite;
+}
+.pl--barrel {
+  width: 6%;
+  right: 34%;
+  bottom: 8%;
+  animation: bob 5.1s ease-in-out infinite -1.4s;
+}
+/* split to the outer edges — a single centred sheet covered the copy */
+.pl--debrisL {
+  width: 30%;
+  left: -2%;
+  bottom: 20%;
+  opacity: 0.85;
+  animation: tumble 12s ease-in-out infinite;
+}
+.pl--debrisR {
+  width: 28%;
+  right: -1%;
+  bottom: 24%;
+  opacity: 0.8;
+  transform: scaleX(-1);
+  animation: tumble 14s ease-in-out infinite -3s;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  40% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.72;
+  }
+}
+@keyframes rise {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-14px) scale(1.03);
+  }
+}
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-0.7deg);
+  }
+  50% {
+    transform: rotate(0.7deg);
+  }
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+@keyframes tumble {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-10px, -16px) rotate(-1.4deg);
+  }
+}
+
+@keyframes drop {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  50% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  51% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
