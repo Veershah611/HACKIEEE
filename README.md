@@ -41,7 +41,7 @@ app/
   page.tsx             # section order — the whole page composition
 components/
   sections/            # one file per page section
-  ui/                  # inline SVG figures, shared pieces
+  ui/                  # Figure, the Bugle web backdrop
   SiteEffects.tsx      # page-wide reveal/counter/anchor effects
 content/               # <- all copy and data
 lib/
@@ -73,9 +73,9 @@ runtime, and it is the price of the structure above.
 | CSS + JS | 12.0 KB | 152.5 KB |
 | **Code total (gzip)** | **19.9 KB** | **164.6 KB** |
 
-Images are unchanged and still dominate: 35 source renders totalling 48.8 MB
-compress to **2.21 MB**, and the measured initial view on the original was
-**509 KB across 20 requests**. The new initial view is roughly **650 KB**.
+Images still dominate: 37 source renders totalling 51.3 MB compress to
+**2.31 MB**, and the measured initial view on the original was **509 KB across
+20 requests**. The new initial view is roughly **650 KB**.
 
 That is a real regression on a metric this project cared about. It is
 recoverable — see [Open questions](#open-questions) — but in the meantime:

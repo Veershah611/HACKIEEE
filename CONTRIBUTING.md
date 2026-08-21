@@ -28,7 +28,7 @@ CI runs `lint`, `typecheck` and `build` on every PR. All three must pass.
 content/       ← copy, dates, prizes, tracks, FAQ. Typed data, no markup.
 components/
   sections/    ← one file per page section
-  ui/          ← shared pieces and the inline SVG figures
+  ui/          ← shared pieces (Figure, the Bugle web backdrop)
 lib/hooks/     ← one file per interaction behaviour
 styles/
   tokens.css   ← palette, type stack, spacing. Change colours HERE.
@@ -61,18 +61,31 @@ parallax reads `data-depth` off the DOM.
 then reference `/assets/opt/<kebab-name>.webp`. Never reference `assets/*.png`
 directly; those are 48 MB of source that must not ship.
 
-**Replace a character figure with a render** — Doom and the web-slinger are
-hand-drawn flat SVG, which reads as a different medium from the photoreal LEGO
-renders. Swapping in a render is a one-line change in `content/figures.ts`:
+**Replace a character figure** — the two figures are renders like everything
+else. Swapping one is a content change:
 
 1. Drop the transparent PNG in `assets/`, run `npm run assets`.
-2. Uncomment and set `image` (plus `width`/`height` from the optimiser output).
+2. Update `src`, `width` and `height` in `content/figures.ts`. The dimensions
+   must match the optimiser's printed output — they are what reserves the box
+   and stops the layout shifting while the image loads.
 
-`components/ui/Figure.tsx` renders the image when `image` is set and falls back
-to the vector otherwise, so no section component changes.
+**Source PNGs must have a real alpha channel.** Screenshotting a generator's
+transparency preview bakes the grey checkerboard in as opaque pixels and the
+figure renders as a grey rectangle. Check before committing:
 
-**Add a new character** — same as above: add an entry to `content/figures.ts`,
-render it with `<Figure>`, and give it a `.fig--<name>` sizing rule.
+```bash
+python -c "from PIL import Image;im=Image.open('assets/YOUR.png');print(im.mode, im.getchannel('A').getextrema() if 'A' in im.mode else 'NO ALPHA')"
+```
+
+An alpha range of `(255, 255)` means there is no transparency — re-export.
+
+**Add a new character** — add an entry to `content/figures.ts`, render it with
+`<Figure>`, and give it a `.fig--<name>` sizing rule.
+
+**Mind the aspect ratio when swapping.** Sizing caps are widths, so a render
+with a different aspect than the one it replaces changes height too. Both
+`.fig--doom` and `.fig--web` carry a comment recording the ratio they were
+tuned for.
 
 ---
 

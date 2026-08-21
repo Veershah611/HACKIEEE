@@ -1,36 +1,35 @@
 /**
  * The two character figures.
  *
- * Both currently render as hand-drawn flat SVG (`components/ui/*Figure.tsx`),
- * which reads as a different medium from the photoreal LEGO renders used
- * everywhere else on the page. Replacing them with renders is a one-line
- * change per figure and needs no component edit:
+ * These are photoreal renders exported by `tools/optimize-assets.py`, matching
+ * the medium of every other asset on the page. `width`/`height` are the
+ * optimiser's output dimensions and must be kept in sync with it — they are
+ * what stops the layout shifting while the image loads.
  *
- *   1. Drop the source PNG into `assets/` (transparent background).
- *   2. Run `npm run assets` — it trims, resizes and exports WebP to
- *      `public/assets/opt/<kebab-name>.webp`.
- *   3. Set `image` below to that path and fill in `width`/`height` from the
- *      optimiser's output (it prints the final dimensions).
+ * To replace one: drop the transparent PNG in `assets/`, run `npm run assets`,
+ * then update the path and dimensions here. No component changes.
  *
- * Leave `image` undefined to keep the vector fallback.
+ * The alt text deliberately describes the figures rather than naming the
+ * characters, which pairs with the trademark disclaimer in the footer.
  */
 export type Figure = {
-  /** set to a /assets/opt/*.webp path to use a render instead of the SVG */
-  image?: string;
-  /** intrinsic size of the render — required when `image` is set, to prevent layout shift */
-  width?: number;
-  height?: number;
-  /** describes the figure for screen readers, in both the SVG and image cases */
+  src: string;
+  width: number;
+  height: number;
   alt: string;
 };
 
 export const figures: Record<'doom' | 'webSlinger', Figure> = {
   doom: {
-    // image: '/assets/opt/doom-minifig.webp',
+    src: '/assets/opt/lego-doom.webp',
+    width: 620,
+    height: 716,
     alt: 'Armoured monarch minifigure',
   },
   webSlinger: {
-    // image: '/assets/opt/web-slinger-minifig.webp',
+    src: '/assets/opt/lego-spiderman.webp',
+    width: 620,
+    height: 611,
     alt: 'Web-slinging builder minifigure',
   },
 };

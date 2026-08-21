@@ -72,7 +72,8 @@
   margin-bottom: 14px;
 }
 .fig--web {
-  max-width: min(280px, 90%);
+  /* render is 620x611 — near square, against the old vector's 240x380 */
+  max-width: min(360px, 100%);
   margin-inline: auto;
   filter: drop-shadow(0 26px 40px rgba(0, 0, 0, 0.7));
   animation: bob 5.4s ease-in-out infinite;

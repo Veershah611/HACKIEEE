@@ -66,6 +66,8 @@ ASSET_ROLE = {
     'lego_sustainability_minifigure':           'prop',
     'minifig_flagholder':                       'prop',
     'hazmat_scientist':                         'prop',
+    'lego_doom':                                'prop',
+    'lego_spiderman':                           'prop',
 
     'fintech_coins':                            'float',
     'flying_cyber_bricks':                      'float',

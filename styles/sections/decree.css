@@ -14,16 +14,6 @@
   position: relative;
   justify-self: center;
 }
-/* Scoped to direct images that are NOT the bomb. The old blanket
-   `.decree__art img` rule scored 0,1,1 and silently outranked the 0,1,0
-   `.decree__bomb` sizing below, so the bomb rendered at 80% of the art box
-   instead of its intended 36% and buried the figure it sits beside. */
-.decree__art img:not(.decree__bomb) {
-  width: min(360px, 80%);
-  margin-inline: auto;
-  filter: drop-shadow(0 24px 40px rgba(255, 78, 0, 0.28));
-  animation: bob 5.6s ease-in-out infinite;
-}
 .decree__fuse {
   position: absolute;
   top: 6%;
@@ -118,9 +108,15 @@
   display: block;
 }
 .fig--doom {
-  max-width: min(300px, 72%);
+  /* render is 620x716 (0.87) where the old vector was 240x380 (0.63), so the
+     same width would read a third shorter — the cap rises to compensate */
+  max-width: min(340px, 86%);
+  margin-inline: auto;
   filter: drop-shadow(0 26px 40px rgba(0, 0, 0, 0.7));
   animation: bob 6s ease-in-out infinite;
+  /* sits under the bomb, above the section wash */
+  position: relative;
+  z-index: 1;
 }
 /* The bomb used to sit at 36% over the figure's centre, hiding the tunic,
    belt and gauntlets — the only parts that identify the character. Pulled
@@ -133,9 +129,4 @@
   filter: drop-shadow(0 18px 28px rgba(255, 78, 0, 0.3));
   animation: bob 5s ease-in-out infinite -1.6s;
   z-index: 2;
-}
-/* Keep the figure above the section wash and give it room beside the bomb. */
-.fig--doom {
-  position: relative;
-  z-index: 1;
 }

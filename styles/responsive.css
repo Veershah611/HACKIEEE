@@ -44,10 +44,10 @@
     opacity: 0.1;
   }
   .fig--doom {
-    max-width: 210px;
+    max-width: 240px;
   }
   .fig--web {
-    max-width: 200px;
+    max-width: 260px;
   }
   .stats {
     grid-template-columns: repeat(2, 1fr);

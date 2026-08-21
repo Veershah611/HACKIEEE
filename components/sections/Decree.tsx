@@ -1,4 +1,3 @@
-import { DoomFigure } from '@/components/ui/DoomFigure';
 import { Figure } from '@/components/ui/Figure';
 import { figures } from '@/content/figures';
 
@@ -14,7 +13,7 @@ export function Decree() {
     <section className="sec sec--decree" id="decree">
       <div className="wrap decree">
         <div className="decree__art" data-reveal>
-          <Figure figure={figures.doom} className="fig--doom" fallback={<DoomFigure />} />
+          <Figure figure={figures.doom} className="fig--doom" />
           <img
             className="decree__bomb"
             src="/assets/opt/lego-bomb.webp"
