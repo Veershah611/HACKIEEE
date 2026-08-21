@@ -5,215 +5,215 @@
    whose oversized studs were clipped off the top of the screen.
    ===================================================================== */
 .dock {
-	position: fixed;
-	top: 20px;
-	left: 50%;
-	translate: -50% 0;
-	z-index: 70;
-	width: min(1200px, calc(100% - 32px));
-	transition:
-		opacity 0.6s var(--ease),
-		transform 0.6s var(--ease),
-		top 0.35s var(--ease);
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  translate: -50% 0;
+  z-index: 70;
+  width: min(1200px, calc(100% - 32px));
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease),
+    top 0.35s var(--ease);
 }
 .js .dock:not(.in) {
-	opacity: 0;
-	transform: translateY(-10px);
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 .dock__studs {
-	position: absolute;
-	left: 22px;
-	right: 22px;
-	top: -7px;
-	z-index: 0;
-	display: flex;
-	justify-content: space-between;
-	pointer-events: none;
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: -7px;
+  z-index: 0;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
 }
 .dock__studs i {
-	width: 18px;
-	height: 10px;
-	border-radius: 5px 5px 2px 2px;
-	background: linear-gradient(180deg, #3a3a48, #22222e);
-	box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.14);
-	transition: background 0.4s;
+  width: 18px;
+  height: 10px;
+  border-radius: 5px 5px 2px 2px;
+  background: linear-gradient(180deg, #3a3a48, #22222e);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.14);
+  transition: background 0.4s;
 }
 .dock.stuck .dock__studs i {
-	background: linear-gradient(180deg, var(--lava), var(--ember));
+  background: linear-gradient(180deg, var(--lava), var(--ember));
 }
 
 .dock__body {
-	position: relative;
-	z-index: 1;
-	display: flex;
-	align-items: center;
-	gap: 22px;
-	padding: 10px 12px 10px 16px;
-	border-radius: 12px;
-	background: rgba(16, 16, 23, 0.82);
-	backdrop-filter: blur(16px) saturate(140%);
-	-webkit-backdrop-filter: blur(16px) saturate(140%);
-	border: 1px solid rgba(240, 237, 232, 0.1);
-	box-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.06) inset,
-		0 18px 40px rgba(0, 0, 0, 0.55);
-	transition:
-		background 0.35s,
-		border-color 0.35s,
-		box-shadow 0.35s;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 10px 12px 10px 16px;
+  border-radius: 12px;
+  background: rgba(16, 16, 23, 0.82);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(240, 237, 232, 0.1);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 18px 40px rgba(0, 0, 0, 0.55);
+  transition:
+    background 0.35s,
+    border-color 0.35s,
+    box-shadow 0.35s;
 }
 .dock.stuck .dock__body {
-	background: rgba(10, 10, 15, 0.92);
-	border-color: rgba(255, 78, 0, 0.3);
-	box-shadow:
-		0 1px 0 rgba(255, 255, 255, 0.06) inset,
-		0 14px 34px rgba(0, 0, 0, 0.7);
+  background: rgba(10, 10, 15, 0.92);
+  border-color: rgba(255, 78, 0, 0.3);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 14px 34px rgba(0, 0, 0, 0.7);
 }
 
 .brand {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	flex: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
 }
 .brand img {
-	width: 34px;
-	height: 34px;
-	object-fit: contain;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 .brand__txt {
-	display: flex;
-	align-items: baseline;
-	gap: 1px;
-	line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  line-height: 1;
 }
 /* "IEEE" in the pixel face reads as gibberish at this size, so the
    wordmark splits: pixel for "Hack", spaced Silkscreen for "IEEE". */
 .brand__txt b {
-	font-family: var(--f-pixel);
-	font-weight: 700;
-	font-size: 19px;
-	color: var(--ink);
+  font-family: var(--f-pixel);
+  font-weight: 700;
+  font-size: 19px;
+  color: var(--ink);
 }
 .brand__txt i {
-	font-family: var(--f-micro);
-	font-style: normal;
-	font-weight: 700;
-	font-size: 13px;
-	letter-spacing: 0.1em;
-	color: var(--ember);
+  font-family: var(--f-micro);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  color: var(--ember);
 }
 
 .dock__links {
-	display: flex;
-	gap: 4px;
-	margin-left: auto;
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
 }
 .dock__links a {
-	position: relative;
-	padding: 8px 12px;
-	border-radius: 7px;
-	font-size: 13.5px;
-	color: var(--muted);
-	transition:
-		color 0.25s,
-		background 0.25s;
+  position: relative;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 13.5px;
+  color: var(--muted);
+  transition:
+    color 0.25s,
+    background 0.25s;
 }
 .dock__links a:hover {
-	color: var(--ink);
-	background: rgba(240, 237, 232, 0.06);
+  color: var(--ink);
+  background: rgba(240, 237, 232, 0.06);
 }
 .dock__links a.active {
-	color: var(--ink);
+  color: var(--ink);
 }
 .dock__links a.active::after {
-	content: "";
-	position: absolute;
-	left: 12px;
-	right: 12px;
-	bottom: 3px;
-	height: 2px;
-	border-radius: 2px;
-	background: var(--ember);
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ember);
 }
 
 .dock__cta {
-	flex: none;
-	display: inline-flex;
-	align-items: center;
-	padding: 10px 20px;
-	border-radius: 8px;
-	font-family: var(--f-micro);
-	font-size: 11px;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-	background: linear-gradient(180deg, var(--lava), var(--ember));
-	color: #180700;
-	box-shadow:
-		0 4px 0 #a33100,
-		0 8px 20px rgba(255, 78, 0, 0.34);
-	transition:
-		transform 0.16s var(--ease),
-		box-shadow 0.3s;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: var(--f-micro);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, var(--lava), var(--ember));
+  color: #180700;
+  box-shadow:
+    0 4px 0 #a33100,
+    0 8px 20px rgba(255, 78, 0, 0.34);
+  transition:
+    transform 0.16s var(--ease),
+    box-shadow 0.3s;
 }
 .dock__cta:hover {
-	box-shadow:
-		0 4px 0 #a33100,
-		0 10px 26px rgba(255, 78, 0, 0.5);
+  box-shadow:
+    0 4px 0 #a33100,
+    0 10px 26px rgba(255, 78, 0, 0.5);
 }
 .dock__cta:active {
-	transform: translateY(4px);
-	box-shadow: 0 0 0 #a33100;
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #a33100;
 }
 
 .burger {
-	display: none;
-	width: 38px;
-	height: 38px;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	gap: 5px;
-	margin-left: auto;
+  display: none;
+  width: 38px;
+  height: 38px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
 }
 .burger i {
-	width: 17px;
-	height: 2px;
-	background: var(--ink);
-	transition: 0.35s var(--ease);
+  width: 17px;
+  height: 2px;
+  background: var(--ink);
+  transition: 0.35s var(--ease);
 }
 .burger[aria-expanded="true"] i:first-child {
-	transform: translateY(3.5px) rotate(45deg);
+  transform: translateY(3.5px) rotate(45deg);
 }
 .burger[aria-expanded="true"] i:last-child {
-	transform: translateY(-3.5px) rotate(-45deg);
+  transform: translateY(-3.5px) rotate(-45deg);
 }
 
 .drawer {
-	position: fixed;
-	inset: 0;
-	z-index: 65;
-	background: var(--void);
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	gap: 4px;
-	padding: 0 var(--pad);
-	clip-path: inset(0 0 100% 0);
-	transition: clip-path 0.55s var(--ease);
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  background: var(--void);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 var(--pad);
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.55s var(--ease);
 }
 .drawer.open {
-	clip-path: inset(0 0 0 0);
+  clip-path: inset(0 0 0 0);
 }
 .drawer a:not(.btn) {
-	padding: 13px 0;
-	border-bottom: 1px solid var(--line);
-	font-family: var(--f-pixel);
-	font-weight: 600;
-	font-size: clamp(20px, 5.4vw, 28px);
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--f-pixel);
+  font-weight: 600;
+  font-size: clamp(20px, 5.4vw, 28px);
 }
 .drawer .btn {
-	margin-top: 22px;
-	align-self: flex-start;
+  margin-top: 22px;
+  align-self: flex-start;
 }

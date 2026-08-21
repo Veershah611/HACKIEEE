@@ -21,10 +21,17 @@
       },
       "style": {
         "noNonNullAssertion": "off"
+      },
+      "complexity": {
+        "noImportantStyles": "off"
       }
     }
   },
   "javascript": {
-    "formatter": { "quoteStyle": "single", "semicolons": "always", "jsxQuoteStyle": "double" }
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always",
+      "jsxQuoteStyle": "double"
+    }
   }
 }

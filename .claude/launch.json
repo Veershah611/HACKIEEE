@@ -1,12 +1,12 @@
 {
-	"version": "0.0.1",
-	"configurations": [
-		{
-			"name": "hackieee-dev",
-			"runtimeExecutable": "npx",
-			"runtimeArgs": ["next", "dev"],
-			"autoPort": true,
-			"port": 5173
-		}
-	]
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "hackieee-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["next", "dev"],
+      "autoPort": true,
+      "port": 5173
+    }
+  ]
 }

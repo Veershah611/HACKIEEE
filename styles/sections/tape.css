@@ -2,37 +2,52 @@
    HAZARD TAPE MARQUEE
    ===================================================================== */
 .tape {
-	position: relative;
-	z-index: 4;
-	overflow: hidden;
-	border-block: 3px solid var(--void);
-	background: repeating-linear-gradient(
-		135deg,
-		var(--hazard) 0 28px,
-		#171008 28px 56px
-	);
-	padding-block: 11px;
+  position: relative;
+  z-index: 4;
+  overflow: hidden;
+  border-block: 3px solid var(--void);
+  background: repeating-linear-gradient(135deg, var(--hazard) 0 28px, #171008 28px 56px);
+  padding-block: 11px;
+}
+/* The copy used to print in --void directly onto the stripes, and half of
+   every stripe pair is #171008 — so the text vanished wherever it crossed a
+   dark band. This is the printed label plate it needed: stripes stay visible
+   as top and bottom edging, the text gets one continuous ground. */
+.tape::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  translate: 0 -50%;
+  height: clamp(26px, 3.4vw, 36px);
+  background: var(--void);
+  box-shadow:
+    0 -1px 0 rgba(255, 214, 0, 0.55),
+    0 1px 0 rgba(255, 214, 0, 0.55);
+  z-index: 0;
 }
 .tape__run {
-	display: flex;
-	width: max-content;
-	animation: slide 26s linear infinite;
-	gap: 26px;
-	align-items: center;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: max-content;
+  animation: slide 26s linear infinite;
+  gap: 26px;
+  align-items: center;
 }
 .tape__run span {
-	font-family: var(--f-pixel);
-	font-weight: 700;
-	font-size: clamp(15px, 1.9vw, 22px);
-	color: var(--void);
-	white-space: nowrap;
+  font-family: var(--f-pixel);
+  font-weight: 700;
+  font-size: clamp(15px, 1.9vw, 22px);
+  color: var(--hazard);
+  white-space: nowrap;
 }
 .tape__run b {
-	color: var(--ember);
-	font-size: 0.7em;
+  color: var(--ember);
+  font-size: 0.7em;
 }
 @keyframes slide {
-	to {
-		transform: translateX(-33.333%);
-	}
+  to {
+    transform: translateX(-33.333%);
+  }
 }

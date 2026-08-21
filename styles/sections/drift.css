@@ -2,38 +2,38 @@
    DRIFTING PROPS
    ===================================================================== */
 .drift {
-	position: absolute;
-	pointer-events: none;
-	z-index: 0;
-	filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.6));
-	opacity: 0.9;
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.6));
+  opacity: 0.9;
 }
 .drift--torch {
-	width: clamp(90px, 10vw, 150px);
-	left: -2%;
-	bottom: 8%;
-	animation: bob 6s ease-in-out infinite;
+  width: clamp(90px, 10vw, 150px);
+  left: -2%;
+  bottom: 8%;
+  animation: bob 6s ease-in-out infinite;
 }
 .drift--rock {
-	width: clamp(110px, 12vw, 190px);
-	right: -3%;
-	top: 12%;
-	animation: spin-slow 26s linear infinite;
+  width: clamp(110px, 12vw, 190px);
+  right: -3%;
+  top: 12%;
+  animation: spin-slow 26s linear infinite;
 }
 .drift--rocket {
-	width: clamp(96px, 10vw, 158px);
-	right: 2%;
-	top: 16%;
-	animation: bob 5.4s ease-in-out infinite;
+  width: clamp(96px, 10vw, 158px);
+  right: 2%;
+  top: 16%;
+  animation: bob 5.4s ease-in-out infinite;
 }
 .drift--laptop {
-	width: clamp(120px, 13vw, 210px);
-	left: 2%;
-	bottom: 10%;
-	animation: bob 6.4s ease-in-out infinite -2s;
+  width: clamp(120px, 13vw, 210px);
+  left: 2%;
+  bottom: 10%;
+  animation: bob 6.4s ease-in-out infinite -2s;
 }
 @keyframes spin-slow {
-	to {
-		transform: rotate(360deg);
-	}
+  to {
+    transform: rotate(360deg);
+  }
 }
