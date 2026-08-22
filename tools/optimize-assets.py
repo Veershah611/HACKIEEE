@@ -68,6 +68,13 @@ ASSET_ROLE = {
     'hazmat_scientist':                         'prop',
     'lego_doom':                                'prop',
     'lego_spiderman':                           'prop',
+    'lego_ironman':                             'prop',
+    'lego_thor':                                'prop',
+    'lego_strange':                             'prop',
+    'lego_blackp':                              'prop',
+    'lego_thanos':                              'prop',
+    'lego_loki':                                'prop',
+    'lego_shang':                               'prop',
 
     'fintech_coins':                            'float',
     'flying_cyber_bricks':                      'float',

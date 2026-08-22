@@ -1,0 +1,63 @@
+/* =====================================================================
+   WALKING MINIFIGURE
+
+   Paces the bottom edge as you scroll. Position comes from
+   lib/hooks/useWalker.ts.
+
+   Property split, so nothing fights:
+     .walker      -> `translate`  (JS, horizontal position)
+     .walker__fig -> `scale`      (JS, facing direction)
+     .walker__fig -> `transform`  (CSS, the step bob)
+   ===================================================================== */
+
+.walker {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 60; /* under the dock (70), over the page */
+  width: clamp(46px, 5vw, 66px);
+  pointer-events: none; /* never eats a tap */
+  translate: 16px 0;
+  opacity: 0.92;
+  transition: opacity 0.45s var(--ease);
+  will-change: translate;
+}
+
+.walker__fig {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.7));
+  /* paused until the page actually moves */
+  animation: walkstep 0.42s steps(2, end) infinite;
+  animation-play-state: paused;
+}
+
+/* only steps while the page is scrolling */
+.walker.walking .walker__fig {
+  animation-play-state: running;
+}
+
+@keyframes walkstep {
+  0% {
+    transform: translateY(0) rotate(-2.5deg);
+  }
+  50% {
+    transform: translateY(-3px) rotate(2.5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-2.5deg);
+  }
+}
+
+/* the one place a fixed bottom element is genuinely in the way */
+.walker.gone {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .walker {
+    display: none;
+  }
+}

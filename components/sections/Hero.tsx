@@ -5,6 +5,7 @@ import { event } from '@/content/event';
 import { heroPlanes } from '@/content/hero';
 import { asset } from '@/lib/asset';
 import { useCountdown } from '@/lib/hooks/useCountdown';
+import { useHeroCollapse } from '@/lib/hooks/useHeroCollapse';
 import { useParallax } from '@/lib/hooks/useParallax';
 
 export function Hero() {
@@ -12,6 +13,8 @@ export function Hero() {
   // The hero tracks the whole window, not just its own box, so the diorama
   // keeps responding as the pointer moves across the copy beside it.
   useParallax(diorama, { selector: '.pl', track: 'window' });
+  // the skyline topples as the hero scrolls away
+  useHeroCollapse(diorama);
 
   const left = useCountdown(event.startsAt);
 

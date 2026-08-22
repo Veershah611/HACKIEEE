@@ -14,6 +14,7 @@ npm run dev
 
 New here? Read **[CONTRIBUTING.md](CONTRIBUTING.md)** — it covers where things
 live and the handful of gotchas that will bite you.
+Ideas not yet built, with their real cost, are in **[TODO.md](TODO.md)**.
 
 ---
 
@@ -41,7 +42,7 @@ app/
   page.tsx             # section order — the whole page composition
 components/
   sections/            # one file per page section
-  ui/                  # Figure, the Bugle web backdrop
+  ui/                  # Figure, Bugle backdrop, DoomToggle, Walker
   SiteEffects.tsx      # page-wide reveal/counter/anchor effects
 content/               # <- all copy and data
 lib/
@@ -69,9 +70,16 @@ runtime, and it is the price of the structure above.
 
 | | Original | Now |
 | --- | --- | --- |
-| HTML | 7.9 KB | 12.0 KB |
-| CSS + JS | 12.0 KB | 152.5 KB |
-| **Code total (gzip)** | **19.9 KB** | **164.6 KB** |
+| HTML | 7.9 KB | 10.1 KB |
+| CSS | — | 8.2 KB |
+| JS | 12.0 KB | 150.4 KB |
+| **Code total (gzip)** | **19.9 KB** | **168.7 KB** |
+
+The roster, Doom Mode, the demolition scroll and the walking minifigure
+together added about **4 KB gzipped** on top of that — they are geometry,
+tokens and listeners rather than libraries. The 150 KB of JS is almost
+entirely React and the Next runtime, which is why the note below matters more
+than any feature you add.
 
 Images still dominate: 37 source renders totalling 51.3 MB compress to
 **2.31 MB**, and the measured initial view on the original was **509 KB across
@@ -164,6 +172,90 @@ Adding a plane needs no code change — add an entry to the content file.
 
 ---
 
+## Interactive features
+
+Four things beyond scroll reveals. Each is listed with what it actually costs,
+because the site's whole constraint is staying fast under traffic.
+
+### Roster — "pick your builder"
+
+`components/sections/Roster.tsx`, data in `content/roster.ts`.
+
+Eight LEGO character renders on a shelf. Picking one reveals its line and can
+render a **shareable PNG card** on a canvas (`lib/squadCard.ts`) — figure,
+name, track and the event line, drawn at 2x. The card is generated on demand
+and never leaves the device.
+
+To change the shelf, edit `content/roster.ts`; `width`/`height` must match the
+optimiser's output or the grid reflows while images load.
+
+**Sizing is one knob.** `--fig-art` on `.roster` drives the art box, the card
+height and the row rhythm together. Change that clamp, not the individual
+cards.
+
+### Doom Mode
+
+`lib/hooks/useDoomMode.ts`, palette in `styles/tokens.css`.
+
+A palette takeover armed four ways: the footer toggle, picking a villain from
+the roster, the Konami code, or typing `doom`. Ember becomes Latverian green
+and the ground goes swamp-dark. The choice persists in `localStorage`.
+
+The entire takeover is a token swap under `:root[data-doom]`, so it costs one
+attribute write on `<html>` and fetches nothing. **Add new colours as tokens,
+never inline, or they will not flip.**
+
+It has more than one consumer — the roster arms it, the footer toggle both
+sets and reflects it — so the DOM attribute is the single source of truth with
+a small external store on top (`useSyncExternalStore`). A `useState` per
+caller would let them drift apart.
+
+### Demolition scroll
+
+`lib/hooks/useHeroCollapse.ts`, consequences in `styles/sections/hero.css`.
+
+The skyline topples as the hero leaves the viewport: towers rotate out from
+their base, the blast column swells and washes out, debris spins off, the
+figures duck away. The hook writes a single 0..1 progress value to `--cl` and
+every visual consequence is CSS — one custom property per frame rather than
+nine element writes.
+
+### Walking minifigure
+
+`lib/hooks/useWalker.ts`, `components/ui/Walker.tsx`.
+
+The hazmat scientist paces the bottom edge as you scroll, flipping to face the
+direction of travel and stepping only while the page is moving. Decorative
+throughout: `aria-hidden`, `pointer-events: none`, and `display: none` under
+reduced motion. An IntersectionObserver fades it out over the footer, which is
+the one place a fixed bottom element gets in the way.
+
+> **`loading="lazy"` does not work for it.** A lazy image never resolves for an
+> element that is fixed and permanently in the viewport — the walker shipped
+> invisible until it was switched to eager. It loads eagerly at
+> `fetchPriority="low"` instead.
+
+### Channel discipline — read before adding any animation
+
+The hero planes are driven by three different systems at once, each owning a
+different CSS property:
+
+| Property | Owner |
+| --- | --- |
+| `transform` | idle keyframes (sway, bob, tumble) |
+| `translate` | pointer parallax |
+| `rotate` / `scale` / `opacity` | demolition scroll |
+
+These are independent CSS properties and compose. **There are no free channels
+left on `.pl`** — if you animate one that is already taken you will silently
+clobber the other effect, and it will look like the first one simply stopped
+working. Anything new needs its own wrapper element.
+
+The walker follows the same rule: `translate` on the wrapper, `scale` for the
+flip, `transform` for the step bob.
+
+---
+
 ## Content states
 
 Every element that animates in is hidden by CSS and revealed when script adds
@@ -193,6 +285,13 @@ Everything below lives in `content/` and is marked PLACEHOLDER in-file.
 - **`content/organisers.ts`** — partner slots. Also **CS and SPS logos**: drop
   `cs.png` and `sps.png` into `public/assets/logos/` and the lettermark
   placeholders disappear automatically.
+- **`content/roster.ts`** — Shang-Chi is deliberately absent. The supplied
+  render only has 201x214 of actual content, roughly a third the resolution of
+  the other eight, and looked soft beside them. The source PNG is still in
+  `assets/`: re-export it larger, run `npm run assets`, add one entry.
+
+> The single highest-value gap is **`registerUrl`**. The shareable card is
+> built for sharing but currently has no link to act on.
 
 ---
 

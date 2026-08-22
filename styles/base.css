@@ -226,3 +226,20 @@ summary::-webkit-details-marker {
   transform: translateY(5px);
   box-shadow: 0 0 0 rgba(240, 237, 232, 0.08);
 }
+
+/* =====================================================================
+   PAINT BUDGET
+
+   Sections below the fold are skipped entirely until they approach the
+   viewport. `contain-intrinsic-size` keeps the scrollbar honest while a
+   section is skipped, so this costs no layout jump.
+
+   The hero is excluded — it is always on screen, and skipping it would
+   fight the demolition scroll.
+   ===================================================================== */
+.sec,
+.cta,
+.foot {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}

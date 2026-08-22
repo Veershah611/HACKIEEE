@@ -14,6 +14,9 @@ export const event = {
   /** Kickoff. Drives the hero countdown. Format: YYYY-MM-DDTHH:mm:ss+05:30 */
   startsAt: '2026-12-21T16:00:00+05:30',
 
+  /** Human date range. Printed on the shareable builder card. */
+  datesLabel: '21 — 23 December 2026 · Nirma University',
+
   organiser: 'IEEE Nirma University Student Branch',
   chapters: ['CS', 'ITSS', 'SPS'],
   location: 'Ahmedabad, India',
@@ -51,6 +54,7 @@ export const nav = [
   { href: '#tracks', label: 'Tracks' },
   { href: '#timeline', label: 'Timeline' },
   { href: '#bugle', label: 'Bugle' },
+  { href: '#roster', label: 'Roster' },
   { href: '#prizes', label: 'Prizes' },
   { href: '#faq', label: 'FAQ' },
 ] as const;

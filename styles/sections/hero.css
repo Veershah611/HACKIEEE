@@ -313,3 +313,70 @@
     transform-origin: bottom;
   }
 }
+
+/* =====================================================================
+   DEMOLITION SCROLL
+
+   `--cl` is a 0..1 scroll progress written by lib/hooks/useHeroCollapse.ts.
+   Everything below is driven off it.
+
+   Channel discipline: `transform` belongs to the idle keyframes and
+   `translate` to pointer parallax, so the collapse only ever touches
+   `rotate`, `scale` and `opacity`. Those are independent CSS properties —
+   they compose with the other two instead of overwriting them.
+   ===================================================================== */
+.diorama {
+  --cl: 0;
+  /* the whole scene sinks and fades as it goes */
+  opacity: calc(1 - var(--cl) * 0.8);
+}
+
+/* the towers topple outward from their base */
+.pl--bldgL {
+  transform-origin: bottom right;
+  rotate: calc(var(--cl) * -26deg);
+}
+.pl--bldgR {
+  transform-origin: bottom left;
+  rotate: calc(var(--cl) * 28deg);
+}
+
+/* the blast column swells and washes out */
+.pl--cloud {
+  transform-origin: bottom center;
+  scale: calc(1 + var(--cl) * 0.35);
+  opacity: calc(1 - var(--cl));
+}
+
+/* the mound flattens */
+.pl--rubble {
+  transform-origin: bottom center;
+  scale: calc(1 - var(--cl) * 0.12);
+}
+
+/* debris spins off in opposite directions */
+.pl--debrisL {
+  transform-origin: center;
+  rotate: calc(var(--cl) * -34deg);
+  scale: calc(1 + var(--cl) * 0.25);
+}
+.pl--debrisR {
+  transform-origin: center;
+  rotate: calc(var(--cl) * 32deg);
+  scale: calc(1 + var(--cl) * 0.25);
+}
+
+/* the figures duck out early */
+.pl--hazmat,
+.pl--barrel {
+  opacity: calc(1 - var(--cl) * 1.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diorama,
+  .diorama .pl {
+    rotate: none;
+    scale: none;
+    opacity: 1;
+  }
+}
