@@ -129,8 +129,8 @@ support it skip the listener.
   201x214 of actual content, about a third the resolution of the others. The
   source is still in `assets/` — re-export it larger, run `npm run assets`,
   add one entry to `content/roster.ts`.
-- **Audio sprite** for item 5.
-- **Stats source** for item 7.
+- **Audio sprite** for item 4 (opt-in sound).
+- **Stats source** for item 6 (live damage report).
 
 See also the placeholder list in `README.md` — dates, prize figures, CS and
 SPS logos, partner slots.
