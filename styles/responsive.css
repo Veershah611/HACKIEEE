@@ -18,6 +18,33 @@
   .burger {
     display: flex;
   }
+
+  /* The glass dock measured 1.04:1 against the page — effectively the same
+	   colour as the background, so the whole bar vanished. Dark-on-dark fill
+	   contrast is capped, so the visibility comes from an ember edge and a
+	   lifted panel rather than from the fill alone. */
+  .dock__body {
+    background: rgba(30, 30, 42, 0.96);
+    border-color: rgba(255, 78, 0, 0.45);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 10px 30px rgba(0, 0, 0, 0.8),
+      0 0 24px rgba(255, 78, 0, 0.14);
+  }
+  .dock__studs i {
+    background: linear-gradient(180deg, var(--lava), var(--ember));
+  }
+  /* the burger reads as a button, not three loose lines */
+  .burger {
+    border: 1px solid rgba(255, 78, 0, 0.5);
+    border-radius: 9px;
+    background: rgba(255, 78, 0, 0.1);
+  }
+  .burger i {
+    width: 18px;
+    height: 2.5px;
+    border-radius: 2px;
+  }
   .grid2 {
     grid-template-columns: 1fr;
     gap: 24px;
@@ -97,6 +124,12 @@
     font-size: 30px;
   }
 
+  /* comfortable minimum for every button; must precede the more specific
+	   .hero__cta .btn rule below */
+  .btn {
+    min-height: 46px;
+  }
+
   /* --- hero --- */
   .hero {
     /* the diorama is anchored to the bottom; reserve its height so the
@@ -153,9 +186,28 @@
     right: -2%;
   }
 
-  /* --- tracks --- */
+  /* --- tracks ---
+	   The stage clips at a fixed height while the planes are sized as a % of
+	   its WIDTH, so their height follows the render's aspect. On a 335px card
+	   the server rack came out 381px tall in a 200px stage and lost 173px off
+	   the top — the minifigures were decapitated. Taller stage, plus a scale
+	   multiplier on the planes so the art fits instead of being cropped.
+	   `--tls` composes into the existing centring transform, and the bottom
+	   origin keeps every plane seated on the same ground line. */
   .track__stage {
-    height: clamp(200px, 52vw, 250px);
+    height: 268px;
+  }
+  /* Cap every plane to the stage instead of scaling by hand. When
+	   max-height binds on a replaced element CSS recomputes the width from
+	   the intrinsic ratio, so tall renders shrink to fit and wide ones are
+	   left alone — no per-card magic numbers. */
+  .tl {
+    max-height: 96%;
+  }
+  /* the float plane is offset 16%% up the stage, so its ceiling is that
+	   much lower than the planes sitting on the ground line */
+  .tl--float {
+    max-height: 80%;
   }
 
   /* --- timeline --- */
@@ -184,6 +236,25 @@
     /* the 16/7 slot is 147px tall once a column is full-width, so the
 		   five slots must stay two-up and the ratio has to flatten */
     aspect-ratio: 16 / 5;
+  }
+
+  /* --- comfortable tap targets + breathing room --- */
+  .track__info {
+    padding: 20px 18px 22px;
+  }
+  .faq summary {
+    padding-block: 18px;
+    gap: 14px;
+  }
+  .drawer a:not(.btn) {
+    padding-block: 16px;
+  }
+  .prizes article,
+  .stats div {
+    padding: 20px 18px;
+  }
+  .chapters {
+    gap: 30px;
   }
 
   /* --- footer --- */
@@ -229,6 +300,12 @@
   }
   .hero__line {
     font-size: clamp(36px, 12vw, 46px);
+  }
+  .track__stage {
+    height: 246px;
+  }
+  .brand__txt {
+    font-size: 18px;
   }
   .sec {
     padding-block: 58px;

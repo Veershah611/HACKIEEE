@@ -34,12 +34,11 @@ export function Nav() {
           <a className="brand" href="#top">
             <img src={asset('/assets/logos/itss_nirma.png')} alt="" width={34} height={34} />
             {/*
-              Split on purpose: "IEEE" set in Pixelify reads as gibberish at nav
-              size, so the wordmark pairs pixel "Hack" with spaced Silkscreen.
+              One wordmark, one face. Ligatures are disabled for .brand__txt in
+              tokens.css, which is what made "IEEE" legible in the pixel face.
             */}
             <span className="brand__txt">
-              <b>Hack</b>
-              <i>IEEE</i>
+              Hack<i>IEEE</i>
             </span>
           </a>
           <nav className="dock__links" aria-label="Primary">

@@ -90,19 +90,21 @@
 }
 /* "IEEE" in the pixel face reads as gibberish at this size, so the
    wordmark splits: pixel for "Hack", spaced Silkscreen for "IEEE". */
-.brand__txt b {
+.brand__txt {
   font-family: var(--f-pixel);
   font-weight: 700;
-  font-size: 19px;
+  font-size: 20px;
+  letter-spacing: 0.01em;
   color: var(--ink);
 }
+/* same face and size — the ember tint carries the emphasis instead.
+   The four repeated E's need a little air or they read as one block at
+   pixel resolution. */
 .brand__txt i {
-  font-family: var(--f-micro);
   font-style: normal;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 0.1em;
   color: var(--ember);
+  letter-spacing: 0.05em;
+  padding-left: 0.04em;
 }
 
 .dock__links {
