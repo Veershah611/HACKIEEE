@@ -149,3 +149,79 @@
   border: 1px solid var(--line);
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
 }
+
+/* =====================================================================
+   DOOM TOGGLE — the discoverable way in
+
+   Lives in the footer bottom bar. Shares state with the roster through the
+   store in lib/hooks/useDoomMode.ts, so arming Doom Mode by picking a
+   villain lights this up too.
+   ===================================================================== */
+.doomtoggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(240, 237, 232, 0.04);
+  color: var(--muted);
+  font-family: var(--f-micro);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    color 0.3s,
+    border-color 0.3s,
+    background 0.3s,
+    box-shadow 0.3s;
+}
+.doomtoggle:hover {
+  color: var(--ink);
+  border-color: var(--ember);
+  background: rgba(255, 78, 0, 0.08);
+}
+.doomtoggle:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+}
+.doomtoggle__mask {
+  display: block;
+  width: 15px;
+  height: 17px;
+}
+.doomtoggle__mask svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* armed — the mask lights up and breathes */
+.doomtoggle.on {
+  color: var(--ink);
+  border-color: var(--ember);
+  background: rgba(75, 159, 74, 0.14);
+  box-shadow: 0 0 18px rgba(75, 159, 74, 0.28);
+}
+.doomtoggle.on .doomtoggle__mask {
+  animation: doompulse 2.4s ease-in-out infinite;
+}
+@keyframes doompulse {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@media (max-width: 640px) {
+  .doomtoggle {
+    /* full-height tap target in the stacked footer bar */
+    padding-block: 10px;
+  }
+}

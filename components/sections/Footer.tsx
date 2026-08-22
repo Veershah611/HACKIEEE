@@ -1,3 +1,4 @@
+import { DoomToggle } from '@/components/ui/DoomToggle';
 import { event } from '@/content/event';
 import { asset } from '@/lib/asset';
 
@@ -29,6 +30,7 @@ export function Footer() {
         </div>
         <div className="foot__bottom">
           <span>© 2026 {event.organiser}</span>
+          <DoomToggle />
           <span>{event.location}</span>
         </div>
         {/* Trademark disclaimer — this line should stay. */}
