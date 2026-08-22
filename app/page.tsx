@@ -12,6 +12,7 @@ import { Roster } from '@/components/sections/Roster';
 import { Tape } from '@/components/sections/Tape';
 import { Timeline } from '@/components/sections/Timeline';
 import { Tracks } from '@/components/sections/Tracks';
+import { BrickCrumbs } from '@/components/ui/BrickCrumbs';
 import { Walker } from '@/components/ui/Walker';
 
 /**
@@ -38,6 +39,7 @@ export default function Page() {
       </main>
       <Footer />
       <Walker />
+      <BrickCrumbs />
     </>
   );
 }

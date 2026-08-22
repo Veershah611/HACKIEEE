@@ -36,6 +36,16 @@
 
 /* the diorama window */
 .track__stage {
+  /* a real <button>, so keyboard users get the burst too */
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  display: block;
+  width: 100%;
+  cursor: pointer;
   position: relative;
   height: clamp(220px, 26vw, 290px);
   overflow: hidden;
@@ -45,11 +55,33 @@
     transparent 70%
   );
 }
+/*
+  Centring without a transform.
+
+  These used `left: 50%; transform: translateX(-50%)`, which violated the rule
+  in useParallax's own docstring and left `transform` unavailable — the
+  detonate burst had nowhere to go, since `translate` belongs to the parallax.
+
+  `inset-inline` + `margin-inline: auto` centres an absolutely positioned box
+  with no transform at all. It also survives the mobile `max-height` cap in
+  responsive.css: when that binds, the used width shrinks, and auto margins
+  re-centre whatever width the image actually ends up at. A hardcoded `left`
+  would have drifted off-centre exactly there.
+
+  The offset planes shift their centre by biasing one side of the box:
+    mid -> box 0..68%  -> centres on 34%
+    fg  -> box 24..100% -> centres on 62%
+
+  Channel ownership on .tl is now:
+    transform -> the detonate burst
+    translate -> pointer parallax
+    rotate/scale -> free
+*/
 .tl {
   position: absolute;
+  inset-inline: 0;
+  margin-inline: auto;
   bottom: -6%;
-  left: 50%;
-  transform: translateX(-50%); /* base centring */
   will-change: translate;
   transition: translate 0.5s cubic-bezier(0.19, 1, 0.3, 1);
   filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.6));
@@ -61,12 +93,12 @@
 .tl--mid {
   width: 52%;
   bottom: 2%;
-  left: 34%;
+  right: 32%;
 }
 .tl--fg {
   width: 46%;
   bottom: -2%;
-  left: 62%;
+  left: 24%;
 }
 .tl--float {
   width: 88%;
@@ -138,4 +170,75 @@
 }
 .track:hover .track__tag {
   color: var(--c);
+}
+
+/* =====================================================================
+   DETONATE
+
+   Click a card and its planes burst outward, then spring back.
+
+   Distance is keyed off each plane's own depth (`--d`, mirrored from
+   data-depth) so the foreground throws further than the backdrop — the same
+   ordering the parallax uses, which keeps the two effects feeling like one
+   scene rather than two unrelated tricks.
+
+   `--bx`/`--by` are unit direction vectors set per layer in Tracks.tsx.
+
+   This animates `transform` only. `translate` stays untouched, so a burst
+   mid-hover composes with the parallax offset instead of fighting it.
+   ===================================================================== */
+@keyframes detonate {
+  0% {
+    transform: none;
+  }
+  22% {
+    transform: translate(
+        calc(var(--bx, 0) * var(--d, 10) * 1.1px),
+        calc(var(--by, 0) * var(--d, 10) * 1.1px)
+      )
+      rotate(calc(var(--bx, 0) * 7deg)) scale(1.07);
+  }
+  58% {
+    transform: translate(
+        calc(var(--bx, 0) * var(--d, 10) * -0.16px),
+        calc(var(--by, 0) * var(--d, 10) * -0.16px)
+      )
+      rotate(calc(var(--bx, 0) * -1.5deg)) scale(0.985);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.track.detonating .tl {
+  animation: detonate 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* the stage flashes in the track colour as it goes */
+@keyframes detonate-flash {
+  0% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.track.detonating .track__stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(ellipse 60% 50% at 50% 70%, var(--c), transparent 70%);
+  animation: detonate-flash 620ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track.detonating .tl,
+  .track.detonating .track__stage::after {
+    animation: none;
+  }
 }
