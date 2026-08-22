@@ -12,6 +12,7 @@ import { Roster } from '@/components/sections/Roster';
 import { Tape } from '@/components/sections/Tape';
 import { Timeline } from '@/components/sections/Timeline';
 import { Tracks } from '@/components/sections/Tracks';
+import { Walker } from '@/components/ui/Walker';
 
 /**
  * One long-scroll page. Section order is the page order — this is the whole
@@ -36,6 +37,7 @@ export default function Page() {
         <Cta />
       </main>
       <Footer />
+      <Walker />
     </>
   );
 }

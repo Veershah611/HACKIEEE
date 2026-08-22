@@ -19,6 +19,7 @@ Do not rebuild these — they are on `feat/crazy-mode` already.
 | **Roster picker** | `c374f06` | Eight characters, shareable PNG card via `lib/squadCard.ts`. |
 | **Doom Mode** | `c374f06`, `a37ab0f` | Footer toggle + Konami + typing `doom` + picking a villain. Shared store in `lib/hooks/useDoomMode.ts`. |
 | **`content-visibility`** | `c374f06` | Below-fold sections skip paint until near the viewport. |
+| **Walking minifigure** | (this commit) | Paces the bottom edge, flips with direction, steps only while scrolling. `lib/hooks/useWalker.ts`. Fades out over the footer. |
 
 > **Channel discipline — read before adding any animation to the hero.**
 > The diorama planes already use `transform` for idle keyframes and
@@ -67,18 +68,7 @@ Small studs pop and fall on click.
 - **Watch:** skip entirely under `prefers-reduced-motion` and on coarse
   pointers — `lib/media.ts` already has both probes.
 
-### 4. Walking minifig
-The hazmat scientist walks the bottom edge as you scroll, flipping to face
-the direction of travel.
-
-- **Where:** new hook + a fixed-position element
-- **How:** map scroll progress to `translateX`, flip with `scaleX(-1)` on
-  direction change.
-- **Cost:** one listener, one transform. Asset already optimised
-  (`hazmat-scientist.webp`, 14 KB).
-- **Watch:** must not sit over the footer CTA or the dock on mobile.
-
-### 5. Opt-in sound
+### 4. Opt-in sound
 Brick click on nav, snap on register. **Muted by default**, with a speaker
 toggle beside the Doom toggle in the footer.
 
@@ -87,7 +77,7 @@ toggle beside the Doom toggle in the footer.
 - **Needs from you:** the audio sprite. Nothing else here is blocked.
 - **Watch:** persist the preference like Doom Mode does; never autoplay.
 
-### 6. Sealed problem statements
+### 5. Sealed problem statements
 A Doom-sealed panel that cannot open until kickoff, then reveals.
 
 - **Where:** new section, gated on `event.startsAt` (already in
@@ -98,7 +88,7 @@ A Doom-sealed panel that cannot open until kickoff, then reveals.
   page source. Either keep the sealed content genuinely trivial, or fetch it
   at reveal time from somewhere else.
 
-### 7. Live damage report
+### 6. Live damage report
 Registrations / teams / bricks-remaining counters.
 
 - **How:** a GitHub Action on a cron writes `public/stats.json`; the page
@@ -107,7 +97,7 @@ Registrations / teams / bricks-remaining counters.
 - **Needs from you:** where the numbers come from (a form export, a sheet, the
   registration platform's API).
 
-### 8. Red-alert countdown state
+### 7. Red-alert countdown state
 Under 24 hours to kickoff the site shifts: tape goes red, ember glow
 intensifies.
 
@@ -120,7 +110,7 @@ intensifies.
 ## Performance upgrade worth doing before the rest
 
 **CSS scroll-driven animations** (`animation-timeline: view()`) would move the
-demolition scroll — and items 1 and 4 above — onto the compositor and off the
+demolition scroll — and items 1 and the walker — onto the compositor and off the
 main thread entirely. That would let the site do *more* animation for *less*
 CPU than it spends today.
 
