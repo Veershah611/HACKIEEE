@@ -16,6 +16,7 @@ import '@/styles/sections/decree.css';
 import '@/styles/sections/bugle.css';
 import '@/styles/sections/tracks.css';
 import '@/styles/sections/timeline.css';
+import '@/styles/sections/roster.css';
 import '@/styles/sections/prizes.css';
 import '@/styles/sections/chapters.css';
 import '@/styles/sections/faq.css';

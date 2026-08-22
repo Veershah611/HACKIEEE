@@ -32,3 +32,38 @@
   --sec-y: clamp(84px, 11vw, 160px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* =====================================================================
+   DOOM MODE
+
+   Armed by the Konami code, by typing "doom", or by picking a villain from
+   the roster (lib/hooks/useDoomMode.ts). The entire takeover is this token
+   swap — ember becomes Latverian green and the ground goes swamp-dark. No
+   component re-renders and no asset is fetched, so it costs one attribute
+   write on <html>.
+
+   Add new colours as tokens, never inline, or they will not flip here.
+   ===================================================================== */
+:root[data-doom] {
+  --void: #07120a;
+  --ash: #0e1c12;
+  --ash-2: #14291a;
+
+  --ember: #4b9f4a;
+  --lava: #7cd64a;
+  --hazard: #b6ff5e;
+  --radiation: #d4ff3d;
+
+  --ink: #eaf3ea;
+  --muted: rgba(234, 243, 234, 0.62);
+  --faint: rgba(234, 243, 234, 0.34);
+  --line: rgba(234, 243, 234, 0.12);
+}
+
+/* the whole page cross-fades rather than snapping between palettes.
+   One selector, so the doom variant cannot descend below it in specificity. */
+body {
+  transition:
+    background-color 0.6s var(--ease),
+    color 0.6s var(--ease);
+}
