@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
+
+// GitHub Pages serves project repos at /<repo>/, so we need a basePath.
+// Set PAGES_BASE_PATH="" when developing locally (or omit it entirely).
+const basePath = process.env.PAGES_BASE_PATH ?? '';
+
 const nextConfig = {
   // Static export: `next build` emits a plain folder of HTML/CSS/JS in `out/`,
   // deployable to any static host exactly like the old hand-written site.
@@ -12,6 +17,9 @@ const nextConfig = {
   images: { unoptimized: true },
 
   trailingSlash: true,
+
+  // Only set basePath/assetPrefix when building for GitHub Pages.
+  ...(basePath ? { basePath, assetPrefix: basePath } : {}),
 };
 
 export default nextConfig;
