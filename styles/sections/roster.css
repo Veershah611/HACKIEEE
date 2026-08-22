@@ -10,6 +10,8 @@
 }
 
 .roster {
+  /* one knob for the whole shelf — the card rows key off it */
+  --fig-art: clamp(132px, 15vw, 172px);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: clamp(12px, 1.6vw, 20px);
@@ -18,9 +20,13 @@
 
 .fighter {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* Fixed rows, so every card is the same height and every label lands on
+	   the same line whether or not the fighter has a track. A flex column
+	   sized itself to its content, which made the cards 186px or 165px
+	   depending on that one label. */
+  display: grid;
+  grid-template-rows: var(--fig-art) auto auto;
+  justify-items: center;
   gap: 6px;
   padding: 16px 12px 14px;
   border: 1px solid var(--line);
@@ -78,15 +84,26 @@
 }
 
 .fighter__art {
-  display: grid;
-  place-items: center;
-  height: clamp(110px, 13vw, 150px);
+  height: var(--fig-art);
   width: 100%;
 }
+/*
+  object-fit is what actually aligns the shelf.
+
+  `max-height: 100%` did not constrain these: the images all resolved to the
+  column width first, so a tall 620x949 render came out 190px inside a 110px
+  box and sat on top of its own label. Every one of the eight overlapped.
+
+  Sizing the box explicitly and letting object-fit do the scaling is
+  deterministic — each figure is contained in an identical box, and
+  `object-position: bottom` stands them all on one ground line instead of
+  centring them at different heights.
+*/
 .fighter__art img {
-  max-height: 100%;
-  width: auto;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
   filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.65));
   transition: transform 0.35s var(--ease);
 }
@@ -108,6 +125,11 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ember);
+  /* Fixed box, not min-height. An empty span produces no line box, so the
+	   trackless cards sat 3px off from the ones with text. Pinning height and
+	   line-height makes both cases identical. */
+  height: 12px;
+  line-height: 12px;
 }
 .fighter.villain .fighter__track {
   color: var(--radiation);

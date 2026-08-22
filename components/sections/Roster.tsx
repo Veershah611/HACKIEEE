@@ -87,7 +87,8 @@ export function Roster() {
                 />
               </span>
               <span className="fighter__name">{f.name}</span>
-              {f.track && <span className="fighter__track">{f.track}</span>}
+              {/* always rendered, so the grid row exists for every card */}
+              <span className="fighter__track">{f.track ?? ''}</span>
             </button>
           ))}
         </div>
