@@ -51,11 +51,23 @@ export function useReveals() {
   }, []);
 }
 
-/** Hero entrance: the dock plus each `[data-stage]` element, 90ms apart. */
+/**
+ * Hero entrance: each `[data-stage]` element, 90ms apart.
+ *
+ * The dock is deliberately NOT handled here. Adding `.in` with classList only
+ * survives while React never rewrites that element's className, and React
+ * rewrites it whenever the rendered value changes. The dock's className is a
+ * template that flips with `stuck`, so an imperative `.in` was destroyed on
+ * the first scroll and the dock went invisible while still catching clicks.
+ * Nav owns its own reveal state instead.
+ *
+ * The elements below are safe because their classNames are static strings —
+ * React skips the DOM write when the value is unchanged. Any element that
+ * gains a state-dependent className must move its reveal into React too.
+ */
 export function useStageIn() {
   useEffect(() => {
     const reduced = prefersReducedMotion();
-    document.getElementById('nav')?.classList.add('in');
     const timers = Array.from(document.querySelectorAll<HTMLElement>('[data-stage]')).map((n, i) =>
       setTimeout(() => n.classList.add('in'), reduced ? 0 : 90 * i),
     );

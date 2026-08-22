@@ -14,6 +14,17 @@ export function Nav() {
   const stuck = useStuck();
   const active = useScrollSpy(HREFS);
 
+  /*
+    The entrance reveal has to be React state, not a classList.add from a hook.
+    This header's className is a template that changes when `stuck` flips, and
+    React rewrites className whenever the rendered value changes — which
+    silently destroyed an imperatively added `.in`. The dock then matched
+    `.js .dock:not(.in){opacity:0}` and went invisible on first scroll, while
+    staying in the layout and still catching clicks.
+  */
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => setRevealed(true), []);
+
   useDockStuds(studs);
 
   useEffect(() => {
@@ -28,7 +39,7 @@ export function Nav() {
 
   return (
     <>
-      <header className={`dock${stuck ? ' stuck' : ''}`} id="nav">
+      <header className={`dock${revealed ? ' in' : ''}${stuck ? ' stuck' : ''}`} id="nav">
         <span className="dock__studs" ref={studs} aria-hidden="true" />
         <div className="dock__body">
           <a className="brand" href="#top">
