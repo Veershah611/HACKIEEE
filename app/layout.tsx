@@ -22,6 +22,7 @@ import '@/styles/sections/chapters.css';
 import '@/styles/sections/faq.css';
 import '@/styles/sections/cta.css';
 import '@/styles/sections/walker.css';
+import '@/styles/sections/crumbs.css';
 import '@/styles/responsive.css';
 import { asset } from '@/lib/asset';
 

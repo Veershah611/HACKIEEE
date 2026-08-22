@@ -6,11 +6,20 @@
 }
 .road {
   overflow-x: auto;
+  /*
+    Forced, not chosen: with overflow-x on auto the other axis cannot be
+    visible — it computes to auto — so the rail always clips vertically.
+
+    The flag minifigure stands 77px above its card and bobs another ~7px, so
+    the top padding has to clear 84px or the figure loses its head. It was
+    36px, which cut 21px off it (28px at the top of the bob). The margin above
+    is trimmed to keep the section rhythm roughly where it was.
+  */
   overflow-y: hidden;
   scrollbar-width: none;
-  padding-block: 36px 30px;
+  padding-block: 90px 30px;
   scroll-snap-type: x proximity;
-  margin-top: clamp(30px, 4vw, 50px);
+  margin-top: clamp(6px, 1.5vw, 18px);
 }
 .road::-webkit-scrollbar {
   display: none;

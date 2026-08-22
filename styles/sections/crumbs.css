@@ -1,0 +1,73 @@
+/* =====================================================================
+   BRICK CRUMBS
+
+   Studs that pop and fall where you click. The pool is created once in
+   components/ui/BrickCrumbs.tsx and recycled — these rules never run until
+   a crumb is given the `pop` class.
+   ===================================================================== */
+
+.crumbs {
+  position: fixed;
+  inset: 0;
+  z-index: 90; /* above the dock, below nothing that matters */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.crumb {
+  position: absolute;
+  width: 12px;
+  height: 7px;
+  margin: -3px 0 0 -6px; /* centre on the click point */
+  border-radius: 3px 3px 1px 1px;
+  opacity: 0;
+  will-change: transform, opacity;
+
+  /* a stud, not a square: lit on top, shadowed underneath */
+  background: linear-gradient(180deg, var(--crumb), color-mix(in srgb, var(--crumb) 65%, #000));
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.35);
+}
+
+/* cycles the brick colours so a burst is not monochrome */
+.crumb {
+  --crumb: var(--ember);
+}
+.crumb[style*="--hue: 1"] {
+  --crumb: var(--hazard);
+}
+.crumb[style*="--hue: 2"] {
+  --crumb: var(--lava);
+}
+.crumb[style*="--hue: 3"] {
+  --crumb: var(--ink);
+}
+
+/*
+  Thrown up and out, then pulled down past the start point — the second half
+  travels further than the first so it reads as gravity rather than a bounce.
+  `--dx`/`--dy`/`--rot` are set per crumb at click time.
+*/
+@keyframes crumb-pop {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(0.7);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(calc(var(--dx) * 0.75), var(--dy)) rotate(calc(var(--rot) * 0.4)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), calc(var(--dy) * -1 + 90px)) rotate(var(--rot)) scale(0.85);
+  }
+}
+
+.crumb.pop {
+  animation: crumb-pop 720ms cubic-bezier(0.2, 0.7, 0.35, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .crumbs {
+    display: none;
+  }
+}
