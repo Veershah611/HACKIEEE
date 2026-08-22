@@ -18,6 +18,11 @@ const nextConfig = {
 
   trailingSlash: true,
 
+  // basePath/assetPrefix only cover Next's own `_next/*` output. Plain
+  // <img src="/assets/…"> is left alone, so lib/asset.ts prefixes those and
+  // needs the value at runtime — NEXT_PUBLIC_* is inlined at build time.
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
+
   // Only set basePath/assetPrefix when building for GitHub Pages.
   ...(basePath ? { basePath, assetPrefix: basePath } : {}),
 };

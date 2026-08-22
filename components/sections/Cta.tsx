@@ -1,11 +1,12 @@
 import { event } from '@/content/event';
+import { asset } from '@/lib/asset';
 
 export function Cta() {
   return (
     <section className="cta" id="register">
       <img
         className="drift drift--laptop"
-        src="/assets/opt/lego-laptop.webp"
+        src={asset('/assets/opt/lego-laptop.webp')}
         alt=""
         width={300}
         height={284}

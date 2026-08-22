@@ -1,4 +1,5 @@
 import { event } from '@/content/event';
+import { asset } from '@/lib/asset';
 
 export function Footer() {
   return (
@@ -6,7 +7,13 @@ export function Footer() {
       <div className="wrap">
         <div className="foot__top">
           <div>
-            <img src="/assets/logos/itss_nirma.png" alt="" width={46} height={46} loading="lazy" />
+            <img
+              src={asset('/assets/logos/itss_nirma.png')}
+              alt=""
+              width={46}
+              height={46}
+              loading="lazy"
+            />
             <p>
               {event.name} is organised by the {event.organiser} — Computer Society, ITSS and SPS.
             </p>

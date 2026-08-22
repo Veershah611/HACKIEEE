@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { chapters, partners } from '@/content/organisers';
+import { asset } from '@/lib/asset';
 
 /**
  * A chapter logo that degrades to its lettermark if the file is missing.
@@ -13,7 +14,7 @@ function ChapterLogo({ src, alt, fallback }: { src: string; alt: string; fallbac
   return (
     <div className={`chip${failed ? ' empty' : ''}`} data-fallback={fallback}>
       <img
-        src={src}
+        src={asset(src)}
         alt={alt}
         width={74}
         height={74}

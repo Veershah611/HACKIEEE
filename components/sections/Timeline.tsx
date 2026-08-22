@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { schedule } from '@/content/schedule';
+import { asset } from '@/lib/asset';
 import { useDragScroll } from '@/lib/hooks/useDragScroll';
 
 export function Timeline() {
@@ -25,7 +26,7 @@ export function Timeline() {
             <article className="stop" key={s.n} data-reveal>
               {s.art && (
                 <img
-                  src={s.art.src}
+                  src={asset(s.art.src)}
                   alt=""
                   width={s.art.width}
                   height={s.art.height}

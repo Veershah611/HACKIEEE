@@ -1,11 +1,12 @@
 import { inr, prizePool, prizes } from '@/content/prizes';
+import { asset } from '@/lib/asset';
 
 export function Prizes() {
   return (
     <section className="sec" id="prizes">
       <img
         className="drift drift--rocket"
-        src="/assets/opt/lego-rocket.webp"
+        src={asset('/assets/opt/lego-rocket.webp')}
         alt=""
         width={240}
         height={414}

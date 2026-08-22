@@ -1,5 +1,6 @@
 import { Figure } from '@/components/ui/Figure';
 import { figures } from '@/content/figures';
+import { asset } from '@/lib/asset';
 
 const EDICTS = [
   ['I', 'The brief stays sealed until the opening ceremony.'],
@@ -16,7 +17,7 @@ export function Decree() {
           <Figure figure={figures.doom} className="fig--doom" />
           <img
             className="decree__bomb"
-            src="/assets/opt/lego-bomb.webp"
+            src={asset('/assets/opt/lego-bomb.webp')}
             alt=""
             width={420}
             height={375}

@@ -1,4 +1,5 @@
 import type { Figure as FigureData } from '@/content/figures';
+import { asset } from '@/lib/asset';
 
 /**
  * A character render. `className` carries the sizing and idle animation
@@ -9,7 +10,7 @@ export function Figure({ figure, className }: { figure: FigureData; className: s
   return (
     <img
       className={`fig ${className}`}
-      src={figure.src}
+      src={asset(figure.src)}
       alt={figure.alt}
       width={figure.width}
       height={figure.height}

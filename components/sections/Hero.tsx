@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { event } from '@/content/event';
 import { heroPlanes } from '@/content/hero';
+import { asset } from '@/lib/asset';
 import { useCountdown } from '@/lib/hooks/useCountdown';
 import { useParallax } from '@/lib/hooks/useParallax';
 
@@ -70,7 +71,7 @@ export function Hero() {
             key={`${p.key}-${i}`}
             className={`pl pl--${p.key}`}
             data-depth={p.depth}
-            src={p.src}
+            src={asset(p.src)}
             alt=""
             width={p.width}
             height={p.height}

@@ -1,11 +1,12 @@
 import { event, stats } from '@/content/event';
+import { asset } from '@/lib/asset';
 
 export function Brief() {
   return (
     <section className="sec" id="brief">
       <img
         className="drift drift--torch"
-        src="/assets/opt/lego-torch.webp"
+        src={asset('/assets/opt/lego-torch.webp')}
         alt=""
         width={240}
         height={384}
@@ -14,7 +15,7 @@ export function Brief() {
       />
       <img
         className="drift drift--rock"
-        src="/assets/opt/lego-asteroid.webp"
+        src={asset('/assets/opt/lego-asteroid.webp')}
         alt=""
         width={280}
         height={188}

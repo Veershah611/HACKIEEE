@@ -21,6 +21,7 @@ import '@/styles/sections/chapters.css';
 import '@/styles/sections/faq.css';
 import '@/styles/sections/cta.css';
 import '@/styles/responsive.css';
+import { asset } from '@/lib/asset';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     title: seo.title,
     description: seo.ogDescription,
     type: 'website',
-    images: [seo.ogImage],
+    images: [asset(seo.ogImage)],
   },
 };
 
@@ -55,8 +56,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="icon" href={FAVICON} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link rel="preload" as="image" href="/assets/opt/lego-cloud.webp" />
-        <link rel="preload" as="image" href="/assets/opt/rubble-ground.webp" />
+        <link rel="preload" as="image" href={asset('/assets/opt/lego-cloud.webp')} />
+        <link rel="preload" as="image" href={asset('/assets/opt/rubble-ground.webp')} />
         <link rel="stylesheet" href={FONTS} />
         {/*
           Gates every hide rule in CSS. If the bundle fails to load this never

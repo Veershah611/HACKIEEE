@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { nav } from '@/content/event';
+import { asset } from '@/lib/asset';
 import { useDockStuds } from '@/lib/hooks/useDockStuds';
 import { useScrollSpy, useStuck } from '@/lib/hooks/useScrollSpy';
 
@@ -31,7 +32,7 @@ export function Nav() {
         <span className="dock__studs" ref={studs} aria-hidden="true" />
         <div className="dock__body">
           <a className="brand" href="#top">
-            <img src="/assets/logos/itss_nirma.png" alt="" width={34} height={34} />
+            <img src={asset('/assets/logos/itss_nirma.png')} alt="" width={34} height={34} />
             {/*
               Split on purpose: "IEEE" set in Pixelify reads as gibberish at nav
               size, so the wordmark pairs pixel "Hack" with spaced Silkscreen.

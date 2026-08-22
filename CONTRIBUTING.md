@@ -136,6 +136,36 @@ than the card titles and figures they introduce.
 
 ---
 
+### Never write a bare `/assets/…` path
+
+The site deploys to GitHub Pages at `veershah611.github.io/**HACKIEEE**/`, so
+every URL needs that `/HACKIEEE` prefix. Next adds it to its own `_next/*`
+output automatically via `basePath` — but it does **not** touch a plain
+`<img src="/assets/…">`. Those resolve to the domain root and 404.
+
+Always route asset URLs through the helper:
+
+```tsx
+import { asset } from '@/lib/asset';
+
+<img src={asset(figure.src)} />
+<link rel="preload" as="image" href={asset('/assets/opt/lego-cloud.webp')} />
+```
+
+Content files keep storing clean `/assets/…` paths; `asset()` is applied at
+the point of render. To check nothing slipped through:
+
+```bash
+grep -rn 'src="/assets' --include=*.tsx components app
+```
+
+### `public/.nojekyll` must stay
+
+GitHub Pages runs Jekyll, and Jekyll ignores any directory starting with an
+underscore — which is exactly where Next puts every stylesheet and script
+(`_next/`). Without this empty file the site deploys and renders as unstyled
+HTML. Do not delete it.
+
 ## Two lint rules are off on purpose
 
 - `performance/noImgElement` — we use `<img>`, not `next/image`, because

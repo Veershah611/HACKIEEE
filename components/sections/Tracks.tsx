@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { type Track, tracks } from '@/content/tracks';
+import { asset } from '@/lib/asset';
 import { useParallax } from '@/lib/hooks/useParallax';
 
 /**
@@ -26,7 +27,7 @@ function TrackCard({ track }: { track: Track }) {
             key={l.src}
             className={`tl${l.variant ? ` tl--${l.variant}` : ''}`}
             data-depth={l.depth}
-            src={l.src}
+            src={asset(l.src)}
             alt=""
             width={l.width}
             height={l.height}
